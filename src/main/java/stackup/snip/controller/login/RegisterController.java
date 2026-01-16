@@ -22,6 +22,7 @@ public class RegisterController {
         return "login/registerForm";
     }
 
+
     @PostMapping("/register")
     public String register(@ModelAttribute MemberRegisterDto dto) {
         Member member = new Member(dto.getEmail(), dto.getNickname(), dto.getPassword(), LocalDateTime.now(), 1);
