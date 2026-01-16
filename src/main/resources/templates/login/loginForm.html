@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>로그인 | 미완의 스택</title>
+
+  <link href="https://unpkg.com/@tabler/core@latest/dist/css/tabler.min.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/@tabler/core@latest/dist/js/tabler.min.js" defer></script>
+
+  <style>
+      body {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f9fafb;
+      }
+      .login-card {
+          width: 360px;
+      }
+  </style>
+</head>
+<body>
+
+<div class="card login-card shadow-sm">
+  <div class="card-body">
+
+    <div class="text-center mb-4">
+      <img th:src="@{/images/logo_login.png}"
+           class="mb-2"
+           style="height: 200px;"
+           alt="logo">
+      <p class="text-muted">오늘도 하나를 얹는다</p>
+    </div>
+
+    <form th:action="@{/login}" method="post">
+      <div class="mb-3">
+        <input type="email" class="form-control"
+               name="email" placeholder="example@stack.dev" required>
+      </div>
+
+      <div class="mb-3">
+        <input type="password" class="form-control"
+               name="password" placeholder="비밀번호" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">
+        오늘의 스택 쌓으러 가기
+      </button>
+    </form>
+
+    <div class="text-center mt-3 small">
+      처음이신가요?
+      <a href="/register">회원가입</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

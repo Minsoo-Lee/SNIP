@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>회원가입 | 미완의 스택</title>
+
+  <link href="https://unpkg.com/@tabler/core@latest/dist/css/tabler.min.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/@tabler/core@latest/dist/js/tabler.min.js" defer></script>
+
+  <style>
+      body {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f9fafb;
+      }
+      .register-card {
+          width: 360px;
+      }
+  </style>
+</head>
+<body>
+
+<div class="card register-card shadow-sm">
+  <div class="card-body">
+
+    <div class="text-center mb-4">
+      <img th:src="@{/images/logo_login.png}"
+           class="mb-2"
+           style="height: 200px;"
+           alt="logo">
+      <p class="text-muted">오늘도 하나를 얹는다</p>
+    </div>
+
+    <form th:action="@{/register}" method="post">
+
+      <!-- 이메일 -->
+      <div class="mb-3">
+        <input type="email"
+               class="form-control"
+               name="email"
+               placeholder="example@stack.dev"
+               required>
+      </div>
+
+      <!-- 닉네임 -->
+      <div class="mb-3">
+        <input type="text"
+               class="form-control"
+               name="nickname"
+               placeholder="닉네임"
+               required>
+      </div>
+
+      <!-- 비밀번호 -->
+      <div class="mb-3">
+        <input type="password"
+               class="form-control"
+               name="password"
+               placeholder="비밀번호"
+               required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">
+        스택 쌓기 시작하기
+      </button>
+    </form>
+
+    <div class="text-center mt-3 small">
+      이미 계정이 있으신가요?
+      <a th:href="@{/login}">로그인</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
