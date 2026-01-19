@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import stackup.snip.dto.member.MemberRegisterDto;
 import stackup.snip.entity.Member;
-import stackup.snip.service.MemberService;
+import stackup.snip.service.LoginService;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class RegisterController {
 
-    private final MemberService memberService;
+    private final LoginService memberService;
 
     @GetMapping("/register")
     public String registerForm() {
@@ -26,7 +26,7 @@ public class RegisterController {
     @PostMapping("/register")
     public String register(@ModelAttribute MemberRegisterDto dto) {
         Member member = new Member(dto.getEmail(), dto.getNickname(), dto.getPassword(), LocalDateTime.now(), 1);
-        memberService.save(member);
+        memberService.register(member);
         return "/home";
     }
 }
