@@ -34,6 +34,7 @@
     </div>
 
     <form th:action="@{/}"
+          th:object="${memberLoginDto}"
           method="post">
       <div class="mb-3">
         <input type="email" class="form-control"
