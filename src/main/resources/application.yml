@@ -12,7 +12,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  profiles:
+    active: dev
 
   messages:
     basename: messages,errors
+    encoding: UTF-8
 

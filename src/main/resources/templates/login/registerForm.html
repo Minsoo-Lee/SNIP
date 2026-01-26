@@ -33,24 +33,39 @@
       <p class="text-muted">오늘도 하나를 얹는다</p>
     </div>
 
-    <form th:action="@{/register}" method="post">
+    <form th:action="@{/register}"
+          th:object="${memberRegisterDto}"
+          method="post">
 
       <!-- 이메일 -->
       <div class="mb-3">
         <input type="email"
                class="form-control"
-               name="email"
+               th:field="*{email}"
                placeholder="example@stack.dev"
-               required>
+               required
+               th:classappend="${emailError} ? 'is-invalid'">
+
+        <div th:if="${emailError}"
+             class="invalid-feedback d-block text-left">
+          <span th:text="#{${emailError}}"></span>
+        </div>
       </div>
+
 
       <!-- 닉네임 -->
       <div class="mb-3">
         <input type="text"
                class="form-control"
-               name="nickname"
+               th:field="*{nickname}"
                placeholder="닉네임"
-               required>
+               required
+               th:classappend="${nicknameError} ? 'is-invalid'">
+
+        <div th:if="${nicknameError}"
+             class="invalid-feedback d-block text-left">
+          <span th:text="#{${nicknameError}}"></span>
+        </div>
       </div>
 
       <!-- 비밀번호 -->

@@ -1,5 +1,5 @@
 package stackup.snip.exception.login;
 
-public class LoginPasswordNotMatchException extends RuntimeException {
+public class LoginPasswordNotMatchException extends LoginFailException {
 
 }

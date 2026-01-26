@@ -17,18 +17,62 @@
           max-width: 1800px;
           margin: 0 auto;
       }
+
+      /* Sidebar Styles */
+      aside {
+          box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04);
+      }
+
+      .sidebar-nav {
+          padding: 2rem 1rem;
+      }
+
       .sidebar-nav .nav-link {
-          padding: 0.75rem 1rem;
-          border-radius: 0.5rem;
-          transition: all 0.2s;
+          padding: 0.875rem 1.125rem;
+          border-radius: 10px;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          font-size: 1rem;
+          font-weight: 500;
+          color: #495057;
+          margin-bottom: 0.5rem;
+          position: relative;
       }
+
+      .sidebar-nav .nav-link::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 0;
+          width: 3px;
+          background: #667eea;
+          border-radius: 0 2px 2px 0;
+          transition: height 0.25s ease;
+      }
+
       .sidebar-nav .nav-link:hover {
-          background-color: #f8f9fa;
+          background-color: #f8f9ff;
+          color: #667eea;
+          transform: translateX(3px);
       }
+
+      .sidebar-nav .nav-link:hover::before {
+          height: 60%;
+      }
+
       .sidebar-nav .nav-link.active {
-          background-color: #e9ecef;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
           font-weight: 600;
+          box-shadow: 0 3px 10px rgba(102, 126, 234, 0.25);
       }
+
+      .sidebar-nav .nav-link.active::before {
+          display: none;
+      }
+
+      /* Content Styles */
       .answer-textarea {
           resize: vertical;
           min-height: 500px;
@@ -54,30 +98,58 @@
 <!-- Header -->
 <header class="navbar navbar-light bg-white shadow-sm px-4 py-3">
   <div class="container-fluid main-container">
-    <div class="d-flex align-items-center gap-3">
-      <img th:src="@{/images/logo_home.png}"
-           style="height: 60px;"
-           alt="미완의 스택 로고">
-      <strong class="fs-3">오늘도 하나를 얹는다</strong>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <!-- 왼쪽: 로고 + 타이틀 -->
+      <div class="d-flex align-items-center gap-3">
+        <img th:src="@{/images/logo_header.png}"
+             style="height: 70px;"
+             alt="미완의 스택 로고">
+        <div class="d-flex flex-column">
+          <strong style="font-size: 1.75rem;">오늘도 하나를 얹는다</strong>
+        </div>
+      </div>
+
+      <!-- 오른쪽: 환영 메시지 + 날짜 -->
+      <div class="d-flex align-items-center gap-3">
+        <span class="fw-semibold" style="font-size: 1.1rem;">
+          <span th:text="${userName}">홍길동</span>님 👋
+        </span>
+        <span class="text-muted" style="font-size: 1rem;">
+          <span id="currentDate"></span>
+        </span>
+      </div>
     </div>
   </div>
 </header>
+
+<script>
+    // 현재 날짜 표시
+    const dateElement = document.getElementById('currentDate');
+    const today = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+    dateElement.textContent = today.toLocaleDateString('ko-KR', options);
+</script>
 
 <div class="container-fluid main-container">
   <div class="row content-wrapper">
 
     <!-- Sidebar -->
-    <aside class="col-auto bg-white border-end px-0" style="width: 180px;">
-      <nav class="nav flex-column sidebar-nav p-3 gap-1">
+    <aside class="col-auto bg-white border-end px-0" style="width: 150px;">
+      <nav class="nav flex-column sidebar-nav gap-1">
+        <a class="nav-link" th:if="${session.isAdmin}" th:href="@{/objective}">
+          ☑️ 객관식
+        </a>
         <a class="nav-link" th:href="@{/history}">
           📚 기록
         </a>
-<!--        <a class="nav-link" th:href="@{/stats}">-->
         <a class="nav-link" th:href="@{/stats}">
           📊 통계
         </a>
         <a class="nav-link" th:href="@{/settings}">
           ⚙️ 설정
+        </a>
+        <a class="nav-link" th:if="${session.isAdmin}" th:href="@{/admin}">
+          🛡️ 관리자
         </a>
       </nav>
     </aside>

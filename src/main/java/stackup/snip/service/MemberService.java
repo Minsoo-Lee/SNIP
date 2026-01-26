@@ -3,24 +3,34 @@ package stackup.snip.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import stackup.snip.dto.member.MemberLoginDto;
 import stackup.snip.entity.Member;
+import stackup.snip.exception.login.EmailDuplicateException;
 import stackup.snip.exception.login.EmailNotExistException;
-import stackup.snip.exception.login.LoginFailException;
 import stackup.snip.exception.login.LoginPasswordNotMatchException;
+import stackup.snip.exception.login.NicknameDuplicateException;
 import stackup.snip.repository.jpa.MemberJpaRepository;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
 
     @Transactional
-    public Member register(Member member) {
+    public Member register(String email, String nickname, String password, LocalDateTime registeredTime, int streak) {
         // 회원 아이디 중복 검증
+        if (memberJpaRepository.existsByEmail(email)) {
+            throw new EmailDuplicateException();
+        }
 
-        return memberJpaRepository.save(member);
+        // 회원 닉네임 중복 검증
+        if (memberJpaRepository.existsByNickname(nickname)) {
+            throw new NicknameDuplicateException();
+        }
+
+        return memberJpaRepository.save(new Member(email, nickname, password, registeredTime, streak));
     }
 
     @Transactional(readOnly = true)
@@ -33,11 +43,7 @@ public class LoginService {
         if (!member.getPassword().equals(password)) {
             throw new LoginPasswordNotMatchException();
         }
+
         return member;
     }
-
-
-//
-//    @Transactional(readOnly = true)
-//    public Member
 }
