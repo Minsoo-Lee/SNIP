@@ -35,3 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# API 키가 포함된 파일은 git에 올리지 않기
+application-local.yml
+application-api-key.yml
+*-secret.yml
+
+# 환경변수 파일
+.env
+.env.local
