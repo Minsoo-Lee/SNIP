@@ -40,5 +40,5 @@ out/
 src/main/resources/application-notion.yml
 
 # 환경변수 파일
-.env
+src/main/resources/.env
 .env.local
