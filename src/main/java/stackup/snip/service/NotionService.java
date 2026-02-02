@@ -1,7 +1,7 @@
 package stackup.snip.service;
 
 import org.springframework.stereotype.Service;
-import stackup.snip.dto.notion.NotionDto;
+import stackup.snip.dto.question.SubjectiveDto;
 import stackup.snip.notion.NotionClient;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -23,7 +23,7 @@ public class NotionService {
     /**
      * 데이터베이스의 모든 페이지 조회 (제목, 태그)
      */
-    public List<NotionDto> getDatabasePages() {
+    public List<SubjectiveDto> getDatabasePages() {
         String jsonResponse = notionClient.queryDatabase();
 
         // 디버깅: 실제 응답 출력
@@ -37,8 +37,8 @@ public class NotionService {
     /**
      * 노션 응답 파싱
      */
-    private List<NotionDto> parseNotionResponse(String jsonResponse) {
-        List<NotionDto> pages = new ArrayList<>();
+    private List<SubjectiveDto> parseNotionResponse(String jsonResponse) {
+        List<SubjectiveDto> pages = new ArrayList<>();
 
         try {
             JsonNode root = objectMapper.readTree(jsonResponse);
@@ -50,7 +50,7 @@ public class NotionService {
                 System.out.println(result.get("properties").toPrettyString());
                 System.out.println("=======================");
 
-                NotionDto page = new NotionDto();
+                SubjectiveDto page = new SubjectiveDto();
                 page.setId(result.get("id").asText());
 
                 JsonNode properties = result.get("properties");

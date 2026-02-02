@@ -3,7 +3,7 @@ package stackup.snip.controller.notion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import stackup.snip.dto.notion.NotionDto;
+import stackup.snip.dto.question.SubjectiveDto;
 import stackup.snip.service.NotionService;
 
 import java.util.List;
@@ -18,8 +18,8 @@ public class NotionController {
     }
 
     @GetMapping("/notion/update")
-    public ResponseEntity<List<NotionDto>> getPages() {
-        List<NotionDto> pages = notionService.getDatabasePages();
+    public ResponseEntity<List<SubjectiveDto>> getPages() {
+        List<SubjectiveDto> pages = notionService.getDatabasePages();
         return ResponseEntity.ok(pages);
     }
 }
