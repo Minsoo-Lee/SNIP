@@ -1,4 +1,4 @@
-package stackup.snip.init;
+package stackup.snip.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

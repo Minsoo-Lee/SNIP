@@ -1,7 +1,6 @@
-package stackup.snip.controller.question;
+package stackup.snip.controller.subjective;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import stackup.snip.service.SubjectiveService;
@@ -17,4 +16,6 @@ public class SubjectiveController {
     public void addSubjectives() {
         subjectiveService.importFromNotion();
     }
+
+    // 메인화면 진입 시 질문 띄우기
 }

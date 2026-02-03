@@ -3,6 +3,7 @@ package stackup.snip.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
+import stackup.snip.entity.base.TimeBaseEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Member {
+public class Member extends TimeBaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -24,7 +25,6 @@ public class Member {
     @NotEmpty
     private String password;
 
-    private LocalDateTime createdDate;
     private LocalDateTime lastLoginDate;
 
     private Integer loginStreak;
@@ -41,7 +41,6 @@ public class Member {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
-        this.createdDate = dateTime;
         this.lastLoginDate = dateTime;
         this.loginStreak = loginStreak;
     }

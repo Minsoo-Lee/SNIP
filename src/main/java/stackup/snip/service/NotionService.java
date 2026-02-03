@@ -51,15 +51,15 @@ public class NotionService {
                 System.out.println("=======================");
 
                 SubjectiveDto page = new SubjectiveDto();
-                page.setId(result.get("id").asText());
+//                page.setId(result.get("id").asText());
 
                 JsonNode properties = result.get("properties");
 
                 // 제목 추출
-                page.setTitle(extractTitle(properties));
+                page.setQuestion(extractTitle(properties));
 
                 // 태그 추출 (첫 번째 태그만)
-                page.setTag(extractTag(properties));
+                page.setCategory(extractTag(properties));
 
                 pages.add(page);
             }

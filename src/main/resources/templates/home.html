@@ -29,22 +29,33 @@
               </span>
             </div>
           </div>
+          <!-- ====================== -->
+          <!-- POST FORM -->
+          <!-- ====================== -->
+          <form th:action="@{/answer/save}" method="post"
+                class="flex-grow-1 d-flex flex-column">
 
-          <!-- 답변 작성 영역 -->
-          <div class="flex-grow-1 d-flex flex-column">
-        <textarea class="form-control answer-textarea flex-grow-1 fs-5"
-                  placeholder="지금의 이해로 스택을 쌓아 보세요."
-                  th:text="${answer}">
-        </textarea>
-          </div>
+            <!-- 🔥 질문 텍스트 그대로 전송 -->
+            <input type="hidden"
+                   name="question"
+                   th:value="${question}" />
 
-          <!-- 스택 쌓기 버튼 -->
-          <div class="mt-4 text-end">
-            <button class="btn btn-primary btn-lg px-5" type="button">
-              오늘의 스택 쌓기 🧱
-            </button>
-          </div>
+            <!-- 답변 작성 -->
+            <div class="flex-grow-1 d-flex flex-column">
+              <textarea class="form-control answer-textarea flex-grow-1 fs-5"
+                        name="content"
+                        placeholder="지금의 이해로 스택을 쌓아 보세요."
+                        required></textarea>
+            </div>
 
+            <!-- 제출 버튼 -->
+            <div class="mt-4 text-end">
+              <button class="btn btn-primary btn-lg px-5" type="submit">
+                오늘의 스택 쌓기 🧱
+              </button>
+            </div>
+
+          </form>
         </div>
       </div>
     </div>
