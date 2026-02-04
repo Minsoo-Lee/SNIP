@@ -2,10 +2,70 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="layout/base :: layout(~{::section})">
 
+<style>
+    .left-card {
+        position: relative;
+    }
+
+    .card-success-overlay {
+        position: absolute;
+        inset: 0;
+
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(3px);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border-radius: inherit;
+        animation: fadeIn 0.4s ease;
+        z-index: 10;
+    }
+
+    .success-box {
+        text-align: center;
+        animation: pop 0.4s ease;
+    }
+
+    .success-box .check {
+        font-size: 60px;
+        margin-bottom: 10px;
+    }
+
+    @keyframes shake {
+        0%   { transform: translateX(0); }
+        25%  { transform: translateX(-5px); }
+        50%  { transform: translateX(5px); }
+        75%  { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+    }
+
+    .answer-textarea.is-invalid {
+        animation: shake 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    @keyframes pop {
+        from {
+            transform: scale(0.7);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+</style>
+
 <section>
   <div class="row g-4">
 
-    <!-- 왼쪽: 오늘의 문제 (더 넓게) -->
+    <!-- 왼쪽 영역 -->
     <div class="col-8">
       <div class="card shadow-sm left-card">
         <div class="card-body d-flex flex-column h-100">
@@ -14,131 +74,152 @@
 
           <!-- 카테고리 -->
           <div class="mb-3">
-            <span class="badge bg-secondary text-white fs-4 px-3 py-2 me-1 fw-bold"
-                  th:text="${category}">
-              Spring
-            </span>
+                        <span class="badge bg-secondary text-white fs-4 px-3 py-2 me-1 fw-bold"
+                              th:text="${category}">
+                            Spring
+                        </span>
           </div>
 
-          <!-- 문제 텍스트 -->
+          <!-- 문제 -->
           <div class="mb-4">
             <div class="position-relative p-3 bg-light rounded fs-4">
-              <!-- 문제 내용 -->
-              <span th:text="${question}">
-                질문이 여기에 표시됩니다
-              </span>
+                            <span th:text="${question}">
+                                질문 표시 영역
+                            </span>
             </div>
           </div>
-          <!-- ====================== -->
-          <!-- POST FORM -->
-          <!-- ====================== -->
-          <form th:action="@{/answer/save}" method="post"
+
+          <!-- 답변 폼 -->
+          <form th:action="@{/answer/save}"
+                method="post"
                 class="flex-grow-1 d-flex flex-column">
 
-            <!-- 🔥 질문 텍스트 그대로 전송 -->
             <input type="hidden"
                    name="question"
                    th:value="${question}" />
 
-            <!-- 답변 작성 -->
             <div class="flex-grow-1 d-flex flex-column">
-              <textarea class="form-control answer-textarea flex-grow-1 fs-5"
-                        name="content"
-                        placeholder="지금의 이해로 스택을 쌓아 보세요."
-                        required></textarea>
+
+                            <textarea
+                              class="form-control answer-textarea flex-grow-1 fs-5"
+                              th:classappend="${answerError} != null ? ' is-invalid' : ''"
+                              name="content"
+                              th:disabled="${completedToday}"
+                              placeholder="지금의 이해로 스택을 쌓아 보세요."
+                              required>
+                            </textarea>
+
+              <!-- 에러 메시지 -->
+              <div th:if="${answerError}"
+                   class="invalid-feedback d-block">
+                <span th:text="${answerError}"></span>
+              </div>
+
             </div>
 
-            <!-- 제출 버튼 -->
             <div class="mt-4 text-end">
-              <button class="btn btn-primary btn-lg px-5" type="submit">
+              <button class="btn btn-primary btn-lg px-5"
+                      type="submit"
+                      th:disabled="${completedToday}">
                 오늘의 스택 쌓기 🧱
               </button>
             </div>
 
           </form>
         </div>
+
+        <!-- 완료 오버레이 -->
+        <div th:if="${completedToday}" class="card-success-overlay">
+          <div class="success-box">
+            <div class="check">✅</div>
+            <h3>오늘 스택 완료!</h3>
+            <p>Good Job 👍</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- 오른쪽: 어제의 기록 + 진행 상황 -->
+    <!-- 오른쪽 영역 -->
     <div class="col-4">
       <div class="d-flex flex-column gap-4 right-column">
 
-        <!-- 어제의 기록 -->
+        <!-- 어제 기록 -->
         <div class="card shadow-sm flex-grow-1">
           <div class="card-body d-flex flex-column">
+
             <h5 class="card-title mb-3">어제의 기록</h5>
 
-            <!-- 문제 -->
             <div class="mb-3">
               <div class="p-3 bg-light rounded"
-                   style="min-height: 4em; line-height: 1.5em;">
-        <span th:text="${yesterdayQuestion}">
-          어제의 문제가 여기에 표시됩니다
-        </span>
+                   style="min-height: 4em;">
+                <span th:text="${yesterdayQuestion}"></span>
               </div>
             </div>
 
-            <!-- 답변 (🔥 여기만 flex-grow) -->
             <div class="d-flex flex-column flex-grow-1">
-              <div class="yesterday-answer-preview p-3 bg-light rounded flex-grow-1"
-                   style="overflow-y: auto; cursor: pointer;">
-        <span th:text="${yesterdayAnswer}">
-          어제의 답변이 여기에 표시됩니다
-        </span>
+              <div class="p-3 bg-light rounded flex-grow-1"
+                   style="overflow-y: auto;">
+                <span th:text="${yesterdayAnswer}"></span>
               </div>
             </div>
 
           </div>
         </div>
 
-        <!-- 진행 상황 + 오늘의 상태 (가로 배치) -->
+        <!-- 진행 상황 -->
         <div class="row g-3">
-          <!-- 진행 상황 -->
+
           <div class="col-6">
             <div class="card shadow-sm h-100">
               <div class="card-body">
-                <h6 class="card-title fw-bold mb-3">진행 상황</h6>
+
+                <h6 class="fw-bold mb-3">진행 상황</h6>
 
                 <div class="d-flex flex-column gap-2">
-                  <div class="d-flex align-items-center gap-2 p-2 bg-light rounded">
-                    <span>🔥</span>
-                    <span>
-              연속 <span th:text="${consecutiveDays} ?: 0"
-                       class="text-danger fw-bold">7</span>일차
-            </span>
+
+                  <div class="p-2 bg-light rounded">
+                    🔥 연속
+                    <span th:text="${consecutiveDays} ?: 0"
+                          class="text-danger fw-bold"></span>일차
                   </div>
 
-                  <div class="d-flex align-items-center gap-2 p-2 bg-light rounded">
-                    <span>📚</span>
-                    <span>
-              총 <span th:text="${totalProblems} ?: 0"
-                      class="text-primary fw-bold">42</span>문제
-            </span>
+                  <div class="p-2 bg-light rounded">
+                    📚 총
+                    <span th:text="${totalProblems} ?: 0"
+                          class="text-primary fw-bold"></span>문제
                   </div>
+
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 오늘의 상태 -->
+          <!-- 오늘 상태 -->
           <div class="col-6">
             <div class="card shadow-sm h-100">
               <div class="card-body d-flex flex-column">
-                <!-- 제목은 위 -->
-                <h6 class="card-title fw-bold mb-3">오늘의 상태</h6>
 
-                <!-- 가운데 영역 -->
+                <h6 class="fw-bold mb-3">오늘의 상태</h6>
+
                 <div class="flex-grow-1 d-flex justify-content-center align-items-center">
-                  <div class="d-flex align-items-center gap-2 px-4 py-3
-                    bg-success bg-opacity-10 rounded">
-                    <span style="font-size: 1.4rem;">✅</span>
-                    <span class="fw-semibold text-success fs-5">진행 중</span>
+                  <div class="px-4 py-3 rounded"
+                       th:classappend="${completedToday} ?
+                                             ' bg-success bg-opacity-10' :
+                                             ' bg-warning bg-opacity-10'">
+
+                                        <span th:text="${completedToday} ?
+                                              '✅ 완료' :
+                                              '🕐 진행 중'"
+                                              class="fw-semibold fs-5"></span>
+
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
+
         </div>
 
       </div>
@@ -146,5 +227,11 @@
 
   </div>
 </section>
+
+<script th:if="${answerError}">
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector(".answer-textarea")?.focus();
+    });
+</script>
 
 </html>

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.entity.Answer;
 import stackup.snip.entity.Member;
 import stackup.snip.entity.Subjective;
+import stackup.snip.exception.subjective.AnswerBlankException;
 import stackup.snip.repository.jpa.AnswerJpaRepository;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
@@ -20,12 +21,13 @@ public class AnswerService {
 
     @Transactional
     public void saveAnswer(Long memberId, String question, String content) {
+        if (content.isBlank())
+            throw new AnswerBlankException();
         Member member = memberJpaRepository.findById(memberId)
                 .orElseThrow();
         Subjective subjective = subjectiveJpaRepository.findByQuestion(question).orElseThrow();
         Answer answer = new Answer(subjective, member, content);
         answerJpaRepository.save(answer);
-
 
     }
 }

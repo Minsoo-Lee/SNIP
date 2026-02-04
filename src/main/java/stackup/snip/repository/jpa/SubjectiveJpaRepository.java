@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface SubjectiveJpaRepository extends JpaRepository<Subjective, Long> {
 
-    @Query(value = "SELECT * FROM subjective WHERE id NOT IN :selectedIds ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM subjective as s WHERE s.subjective_id NOT IN :selectedIds ORDER BY RAND() LIMIT 1", nativeQuery = true)
     Optional<Subjective> findRandomNotSelected(
             @Param("selectedIds") List<Long> selectedIds
     );
