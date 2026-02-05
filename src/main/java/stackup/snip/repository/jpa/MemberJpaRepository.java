@@ -1,6 +1,8 @@
 package stackup.snip.repository.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import stackup.snip.entity.Member;
 
@@ -15,4 +17,7 @@ public interface MemberJpaRepository extends JpaRepository<Member, Long> {
     boolean existsByEmail(String email);
 
     boolean existsByNickname(String nickname);
+
+    @Query("select m.answerStreak from Member m where m.id = :memberId")
+    int getAnswerStreakByMemberId(@Param("memberId") Long memberId);
 }

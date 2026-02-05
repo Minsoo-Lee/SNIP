@@ -3,6 +3,7 @@ package stackup.snip.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import stackup.snip.entity.Member;
 import stackup.snip.exception.login.EmailDuplicateException;
 import stackup.snip.exception.login.EmailNotExistException;
@@ -30,7 +31,7 @@ public class MemberService {
             throw new NicknameDuplicateException();
         }
 
-        return memberJpaRepository.save(new Member(email, nickname, password, registeredTime, streak));
+        return memberJpaRepository.save(new Member(email, nickname, password, registeredTime));
     }
 
     @Transactional(readOnly = true)
@@ -45,5 +46,10 @@ public class MemberService {
         }
 
         return member;
+    }
+
+    @Transactional(readOnly = true)
+    public int getAnswerStreak(Long memberId) {
+        return memberJpaRepository.getAnswerStreakByMemberId(memberId);
     }
 }

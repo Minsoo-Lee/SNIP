@@ -24,16 +24,8 @@ public class AnswerController {
             @RequestParam String content,
             @RequestAttribute("loginMemberId") Long memberId,
             RedirectAttributes redirectAttributes) {
+        answerService.saveAnswer(memberId, question, content);
 
-        boolean isCompleted;
-        // 답변 없으면 저장 안하고 경고 보내기?
-        try {
-            answerService.saveAnswer(memberId, question, content);
-            redirectAttributes.addFlashAttribute("completedToday", true);
-        } catch (AnswerBlankException e) {
-            redirectAttributes.addFlashAttribute("completedToday", false);
-            redirectAttributes.addFlashAttribute("answerError", "답변을 입력해주세요.");
-        }
         return "redirect:/";
     }
 }

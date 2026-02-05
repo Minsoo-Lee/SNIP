@@ -15,4 +15,9 @@ public class SubjectiveDto {
         this.question = subjective.getQuestion();
         this.category = subjective.getCategory();
     }
+
+    public SubjectiveDto(String question, String category) {
+        this.question = question;
+        this.category = category;
+    }
 }

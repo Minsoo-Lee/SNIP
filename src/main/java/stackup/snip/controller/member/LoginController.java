@@ -36,6 +36,7 @@ public class LoginController {
             // 추후에 세션에서 활용
             Member member = memberService.login(dto.getEmail(), dto.getPassword());
             session.setAttribute("memberId", member.getId());
+            session.setAttribute("userName", member.getNickname());
             session.setAttribute("isAdmin", dto.getEmail().equals(ADMIN_EMAIL));
             return "redirect:/";
         } catch (LoginFailException e) {

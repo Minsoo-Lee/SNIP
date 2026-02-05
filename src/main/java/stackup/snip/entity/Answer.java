@@ -30,6 +30,9 @@ public class Answer extends TimeBaseEntity {
 
     private String content;
 
+    public Answer() {
+    }
+
     public Answer(Subjective subjective, Member member, String content) {
         this.subjective = subjective;
         this.member = member;

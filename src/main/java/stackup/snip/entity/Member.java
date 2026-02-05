@@ -28,6 +28,7 @@ public class Member extends TimeBaseEntity {
     private LocalDateTime lastLoginDate;
 
     private Integer loginStreak;
+    private Integer answerStreak;
 
     //== 연관관계 ==//
     @OneToMany(mappedBy = "member")
@@ -37,11 +38,17 @@ public class Member extends TimeBaseEntity {
     public Member() {
     }
 
-    public Member(String email, String nickname, String password, LocalDateTime dateTime, Integer loginStreak) {
+    public Member(String email, String nickname, String password, LocalDateTime dateTime) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
         this.lastLoginDate = dateTime;
-        this.loginStreak = loginStreak;
+        this.loginStreak = 1;
+        this.answerStreak = 0;
+    }
+
+    //== Streak ++ ==//
+    public void addStreakOnce() {
+        this.answerStreak++;
     }
 }

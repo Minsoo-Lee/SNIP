@@ -16,6 +16,4 @@ public class SubjectiveController {
     public void addSubjectives() {
         subjectiveService.importFromNotion();
     }
-
-    // 메인화면 진입 시 질문 띄우기
 }

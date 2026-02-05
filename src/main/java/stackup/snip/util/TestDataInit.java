@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import stackup.snip.entity.Member;
 import stackup.snip.repository.jpa.MemberJpaRepository;
+import stackup.snip.repository.jpa.SubjectiveJpaRepository;
+import stackup.snip.service.SubjectiveService;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 public class TestDataInit implements CommandLineRunner {
 
     private final MemberJpaRepository memberJpaRepository;
+    private final SubjectiveService subjectiveService;
 
     @Override
     public void run(String... args) {
@@ -23,8 +26,7 @@ public class TestDataInit implements CommandLineRunner {
                         "test@test.com",
                         "test",
                         "1234",
-                        LocalDateTime.now(),
-                        1
+                        LocalDateTime.now()
                 )
         );
         memberJpaRepository.save(
@@ -32,10 +34,10 @@ public class TestDataInit implements CommandLineRunner {
                         "admin@admin.dev",
                         "test",
                         "1234",
-                        LocalDateTime.now(),
-                        1
+                        LocalDateTime.now()
                 )
         );
+        subjectiveService.importFromNotion();
     }
 }
 

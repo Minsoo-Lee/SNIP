@@ -75,7 +75,7 @@
           <!-- 카테고리 -->
           <div class="mb-3">
                         <span class="badge bg-secondary text-white fs-4 px-3 py-2 me-1 fw-bold"
-                              th:text="${category}">
+                              th:text="${subjectiveDto.category}">
                             Spring
                         </span>
           </div>
@@ -83,7 +83,7 @@
           <!-- 문제 -->
           <div class="mb-4">
             <div class="position-relative p-3 bg-light rounded fs-4">
-                            <span th:text="${question}">
+                            <span th:text="${subjectiveDto.question}">
                                 질문 표시 영역
                             </span>
             </div>
@@ -96,31 +96,23 @@
 
             <input type="hidden"
                    name="question"
-                   th:value="${question}" />
+                   th:value="${subjectiveDto.question}" />
 
             <div class="flex-grow-1 d-flex flex-column">
 
-                            <textarea
-                              class="form-control answer-textarea flex-grow-1 fs-5"
-                              th:classappend="${answerError} != null ? ' is-invalid' : ''"
-                              name="content"
-                              th:disabled="${completedToday}"
-                              placeholder="지금의 이해로 스택을 쌓아 보세요."
-                              required>
-                            </textarea>
-
-              <!-- 에러 메시지 -->
-              <div th:if="${answerError}"
-                   class="invalid-feedback d-block">
-                <span th:text="${answerError}"></span>
-              </div>
+              <textarea
+                class="form-control answer-textarea flex-grow-1 fs-5"
+                name="content"
+                th:disabled="${daily.isCompleted}"
+                placeholder="지금의 이해로 스택을 쌓아 보세요."
+                required></textarea>
 
             </div>
 
             <div class="mt-4 text-end">
               <button class="btn btn-primary btn-lg px-5"
                       type="submit"
-                      th:disabled="${completedToday}">
+                      th:disabled="${daily.isCompleted}">
                 오늘의 스택 쌓기 🧱
               </button>
             </div>
@@ -129,7 +121,7 @@
         </div>
 
         <!-- 완료 오버레이 -->
-        <div th:if="${completedToday}" class="card-success-overlay">
+        <div th:if="${daily.isCompleted}" class="card-success-overlay">
           <div class="success-box">
             <div class="check">✅</div>
             <h3>오늘 스택 완료!</h3>
@@ -151,19 +143,36 @@
             <h5 class="card-title mb-3">어제의 기록</h5>
 
             <div class="mb-3">
+              <!-- 카테고리 -->
+              <div class="mb-3">
+                        <span class="badge bg-secondary text-white fs-4 px-3 py-2 me-1 fw-bold"
+                              th:text="${yesterday.category}">
+                            Spring
+                        </span>
+              </div>
+
               <div class="p-3 bg-light rounded"
                    style="min-height: 4em;">
-                <span th:text="${yesterdayQuestion}"></span>
+                <span th:text="${yesterday.question}"></span>
               </div>
             </div>
 
             <div class="d-flex flex-column flex-grow-1">
               <div class="p-3 bg-light rounded flex-grow-1"
                    style="overflow-y: auto;">
-                <span th:text="${yesterdayAnswer}"></span>
+                <span th:text="${yesterday.answer}"></span>
               </div>
             </div>
 
+          </div>
+
+          <!-- 완료 오버레이 -->
+          <div th:if="${!completedYesterday}" class="card-success-overlay">
+            <div class="success-box">
+              <div class="check">‼️</div>
+              <h3>어제의 기록이 없습니다...</h3>
+<!--              <p>Good Job 👍</p>-->
+            </div>
           </div>
         </div>
 
@@ -180,13 +189,13 @@
 
                   <div class="p-2 bg-light rounded">
                     🔥 연속
-                    <span th:text="${consecutiveDays} ?: 0"
+                    <span th:text="${daily.answerStreak} ?: 0"
                           class="text-danger fw-bold"></span>일차
                   </div>
 
                   <div class="p-2 bg-light rounded">
                     📚 총
-                    <span th:text="${totalProblems} ?: 0"
+                    <span th:text="${daily.totalAnswers} ?: 0"
                           class="text-primary fw-bold"></span>문제
                   </div>
 
@@ -204,11 +213,11 @@
 
                 <div class="flex-grow-1 d-flex justify-content-center align-items-center">
                   <div class="px-4 py-3 rounded"
-                       th:classappend="${completedToday} ?
+                       th:classappend="${daily.isCompleted} ?
                                              ' bg-success bg-opacity-10' :
                                              ' bg-warning bg-opacity-10'">
 
-                                        <span th:text="${completedToday} ?
+                                        <span th:text="${daily.isCompleted} ?
                                               '✅ 완료' :
                                               '🕐 진행 중'"
                                               class="fw-semibold fs-5"></span>
@@ -227,11 +236,5 @@
 
   </div>
 </section>
-
-<script th:if="${answerError}">
-    document.addEventListener("DOMContentLoaded", () => {
-        document.querySelector(".answer-textarea")?.focus();
-    });
-</script>
 
 </html>
