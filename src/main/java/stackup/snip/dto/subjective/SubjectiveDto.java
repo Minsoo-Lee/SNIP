@@ -1,4 +1,4 @@
-package stackup.snip.dto.question;
+package stackup.snip.dto.subjective;
 
 import lombok.Getter;
 import lombok.Setter;

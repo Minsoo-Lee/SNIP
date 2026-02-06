@@ -1,4 +1,4 @@
-package stackup.snip.controller.member;
+package stackup.snip.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

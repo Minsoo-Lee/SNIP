@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import stackup.snip.entity.Answer;
 import stackup.snip.entity.Member;
+import stackup.snip.repository.jpa.AnswerJpaRepository;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 import stackup.snip.service.SubjectiveService;
@@ -18,26 +20,35 @@ public class TestDataInit implements CommandLineRunner {
 
     private final MemberJpaRepository memberJpaRepository;
     private final SubjectiveService subjectiveService;
+    private final AnswerJpaRepository answerJpaRepository;
 
     @Override
     public void run(String... args) {
-        memberJpaRepository.save(
-                new Member(
-                        "test@test.com",
-                        "test",
-                        "1234",
-                        LocalDateTime.now()
-                )
+        Member member1 = new Member(
+                "test@test.com",
+                "test",
+                "1234",
+                LocalDateTime.now()
         );
-        memberJpaRepository.save(
-                new Member(
-                        "admin@admin.dev",
-                        "test",
-                        "1234",
-                        LocalDateTime.now()
-                )
+        Member admin = new Member(
+                "admin@admin.dev",
+                "test",
+                "1234",
+                LocalDateTime.now()
         );
+        memberJpaRepository.save(member1);
+        memberJpaRepository.save(admin);
         subjectiveService.importFromNotion();
+        answerJpaRepository.save(new Answer(
+                subjectiveService.getOneForTest(),
+                member1,
+                "content1"
+        ));
+        answerJpaRepository.save(new Answer(
+                subjectiveService.getOneForTest(),
+                member1,
+                "content2"
+        ));
     }
 }
 

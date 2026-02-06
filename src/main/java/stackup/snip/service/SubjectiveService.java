@@ -3,8 +3,7 @@ package stackup.snip.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import stackup.snip.dto.question.SubjectiveDto;
+import stackup.snip.dto.subjective.SubjectiveDto;
 import stackup.snip.entity.Subjective;
 import stackup.snip.repository.jpa.AnswerJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
@@ -26,6 +25,11 @@ public class SubjectiveService {
             Subjective subjective = new Subjective(subjectiveDto.getQuestion(), subjectiveDto.getCategory());
             subjectiveJpaRepository.save(subjective);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Subjective getOneForTest() {
+        return subjectiveJpaRepository.findById(1L).orElseThrow();
     }
 
     @Transactional(readOnly = true)

@@ -20,11 +20,11 @@ public class Answer extends TimeBaseEntity {
     @Column(name = "answer_id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subjective_id")
     private Subjective subjective;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

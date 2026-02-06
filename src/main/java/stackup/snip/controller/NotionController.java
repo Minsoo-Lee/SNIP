@@ -1,9 +1,9 @@
-package stackup.snip.controller.notion;
+package stackup.snip.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import stackup.snip.dto.question.SubjectiveDto;
+import stackup.snip.dto.subjective.SubjectiveDto;
 import stackup.snip.service.NotionService;
 
 import java.util.List;

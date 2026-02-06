@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/base :: layout(~{::section})">
+
+<section>
+  <div class="row g-4">
+
+    <!-- 전체 폭 카드 -->
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body d-flex flex-column">
+
+          <!-- 제목 -->
+          <h4 class="card-title mb-4">기록</h4>
+
+          <!-- 검색 영역 -->
+          <form method="get" th:action="@{/history}">
+            <div class="row g-2 align-items-end mb-4">
+
+              <!-- 날짜 -->
+              <div class="col-md-2">
+                <label class="form-label">날짜</label>
+                <select class="form-select" name="period">
+                  <option value="">전체</option>
+                  <option value="7">최근 7일</option>
+                  <option value="30">최근 30일</option>
+                </select>
+              </div>
+
+              <!-- 태그 -->
+              <div class="col-md-2">
+                <label class="form-label">태그</label>
+                <select class="form-select" name="tag">
+                  <option value="">전체</option>
+                  <option th:each="tag : ${tags}"
+                          th:value="${tag}"
+                          th:text="${tag}">
+                  </option>
+                </select>
+              </div>
+
+              <!-- 제목 검색 -->
+              <div class="col-md-6">
+                <label class="form-label">제목 검색</label>
+                <input type="text"
+                       class="form-control"
+                       name="keyword"
+                       placeholder="질문 제목으로 검색">
+              </div>
+
+              <!-- 버튼 -->
+              <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill">
+                  검색
+                </button>
+
+                <a th:href="@{/history}"
+                   class="btn btn-outline-secondary flex-fill">
+                  전체
+                </a>
+              </div>
+
+            </div>
+          </form>
+
+          <!-- 기록 리스트 -->
+          <div class="d-flex flex-column gap-3">
+
+            <a th:each="record : ${records}"
+               th:href="@{/history/{id}(id=${record.id})}"
+               class="text-decoration-none text-dark">
+
+              <div class="p-3 bg-light rounded record-card">
+
+                <div class="d-flex justify-content-between mb-2">
+        <span class="badge bg-secondary"
+              th:text="${record.category}">Spring</span>
+
+                  <small class="text-muted"
+                         th:text="${#temporals.format(record.createdAt, 'yyyy-MM-dd')}">
+                    2026-02-06
+                  </small>
+                </div>
+
+                <div class="fw-semibold mb-2"
+                     th:text="${record.question}">
+                  질문 제목
+                </div>
+
+                <div class="text-muted preview-text"
+                     style="font-size: 0.9rem;"
+                     th:text="${record.content}">
+                  답변 미리보기...
+                </div>
+
+              </div>
+            </a>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</html>

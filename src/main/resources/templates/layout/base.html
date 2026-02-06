@@ -9,6 +9,23 @@
   <script src="https://unpkg.com/@tabler/core@latest/dist/js/tabler.min.js" defer></script>
 
   <style>
+      .record-card {
+          transition: all 0.2s ease;
+          cursor: pointer;
+      }
+
+      .record-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      }
+
+      .preview-text {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+      }
+
       .left-card {
           position: relative;
           overflow: hidden;
@@ -148,14 +165,14 @@
   <div class="container-fluid main-container">
     <div class="d-flex align-items-center justify-content-between w-100">
       <!-- 왼쪽: 로고 + 타이틀 -->
-      <div class="d-flex align-items-center gap-3">
+      <a th:href="@{/}" class="d-flex align-items-center gap-3 text-decoration-none text-dark">
         <img th:src="@{/images/logo_header.png}"
              style="height: 70px;"
              alt="미완의 스택 로고">
         <div class="d-flex flex-column">
           <strong style="font-size: 1.75rem;">오늘도 하나를 얹는다</strong>
         </div>
-      </div>
+      </a>
 
       <!-- 오른쪽: 환영 메시지 + 날짜 -->
       <div class="d-flex align-items-center gap-3">

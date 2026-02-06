@@ -1,4 +1,4 @@
-package stackup.snip.controller.member;
+package stackup.snip.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

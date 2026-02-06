@@ -1,7 +1,7 @@
 package stackup.snip.service;
 
 import org.springframework.stereotype.Service;
-import stackup.snip.dto.question.SubjectiveDto;
+import stackup.snip.dto.subjective.SubjectiveDto;
 import stackup.snip.notion.NotionClient;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
