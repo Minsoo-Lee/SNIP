@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/base :: layout(~{::section})">
+
+<section>
+
+  <div class="row justify-content-center">
+    <div class="col-10">
+
+      <div class="card shadow-sm">
+
+        <div class="card-body">
+
+          <!-- 제목 -->
+          <h4 class="card-title mb-4">답변 상세</h4>
+
+          <!-- 카테고리 + 날짜 -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <span class="badge bg-secondary text-white fs-4 px-3 py-2 me-1 fw-bold"
+                  th:text="${answerDetail.category}">
+              Spring
+            </span>
+
+            <span class="text-muted"
+                  th:text="${#temporals.format(answerDetail.createdAt,'yyyy-MM-dd')}">
+              2026-02-10
+            </span>
+
+          </div>
+
+          <!-- 문제 -->
+          <div class="mb-4">
+            <h6 class="fw-bold mb-2">문제</h6>
+            <div class="p-3 bg-light rounded fs-5"
+                 th:text="${answerDetail.question}">
+              문제 내용
+            </div>
+          </div>
+
+          <!-- 답변 -->
+          <div>
+            <h6 class="fw-bold mb-2">답변</h6>
+            <div class="p-3 bg-light rounded"
+                 style="white-space: pre-line; min-height: 200px;"
+                 th:text="${answerDetail.content}">
+              답변 내용
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</section>
+</html>

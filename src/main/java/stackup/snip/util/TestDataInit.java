@@ -20,7 +20,6 @@ public class TestDataInit implements CommandLineRunner {
 
     private final MemberJpaRepository memberJpaRepository;
     private final SubjectiveService subjectiveService;
-    private final AnswerJpaRepository answerJpaRepository;
 
     @Override
     public void run(String... args) {
@@ -39,16 +38,6 @@ public class TestDataInit implements CommandLineRunner {
         memberJpaRepository.save(member1);
         memberJpaRepository.save(admin);
         subjectiveService.importFromNotion();
-        answerJpaRepository.save(new Answer(
-                subjectiveService.getOneForTest(),
-                member1,
-                "content1"
-        ));
-        answerJpaRepository.save(new Answer(
-                subjectiveService.getOneForTest(),
-                member1,
-                "content2"
-        ));
     }
 }
 

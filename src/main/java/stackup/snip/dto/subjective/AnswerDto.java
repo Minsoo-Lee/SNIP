@@ -4,15 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 @ToString
-public class HistoryDto {
-
-    private Long id;
+public class AnswerDto {
     private String category;
     private String question;
     private String content;

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import stackup.snip.dto.home.YesterdayDto;
+import stackup.snip.dto.subjective.HistoryDto;
 import stackup.snip.entity.Answer;
 import stackup.snip.entity.Subjective;
 
@@ -35,4 +36,11 @@ public interface AnswerJpaRepository extends JpaRepository<Answer, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+
+    @Query("select new stackup.snip.dto.subjective.HistoryDto(" +
+            "a.id, a.subjective.category, a.subjective.question, a.content, a.createdAt) from Answer a " +
+            "where a.member.id = :memberId")
+    List<HistoryDto> findAnswerByMemberId(@Param("memberId") Long memberId);
+
+    Answer findAnswerById(Long id);
 }

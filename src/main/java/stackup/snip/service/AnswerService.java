@@ -1,9 +1,12 @@
 package stackup.snip.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.home.YesterdayDto;
+import stackup.snip.dto.subjective.AnswerDto;
+import stackup.snip.dto.subjective.HistoryDto;
 import stackup.snip.entity.Answer;
 import stackup.snip.entity.Member;
 import stackup.snip.entity.Subjective;
@@ -14,10 +17,12 @@ import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnswerService {
 
     private final AnswerJpaRepository answerJpaRepository;
@@ -65,5 +70,21 @@ public class AnswerService {
         return answerJpaRepository.
                 getYesterdayDtoByMemberIdAndDate(memberId, today.atStartOfDay(), today.plusDays(1).atStartOfDay())
                 .orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<HistoryDto> getQuestionsAnswersWithMemberId(Long memberId) {
+        return answerJpaRepository.findAnswerByMemberId(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public AnswerDto getAnswerDetail(Long answerId) {
+        Answer findAnswer = answerJpaRepository.findAnswerById(answerId);
+        return new AnswerDto(
+                findAnswer.getSubjective().getCategory(),
+                findAnswer.getSubjective().getQuestion(),
+                findAnswer.getContent(),
+                findAnswer.getCreatedAt()
+        );
     }
 }

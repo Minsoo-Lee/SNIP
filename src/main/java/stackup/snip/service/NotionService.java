@@ -93,7 +93,7 @@ public class NotionService {
         if (tagsProperty != null && tagsProperty.has("multi_select")) {
             JsonNode tagsArray = tagsProperty.get("multi_select");
             if (tagsArray.isArray() && !tagsArray.isEmpty()) {
-                return tagsArray.get(0).get("name").asText();
+                return tagsArray.get(0).get("name").asText().trim();
             }
         }
 
