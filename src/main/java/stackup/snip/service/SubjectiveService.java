@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SubjectiveService {
 
     private final SubjectiveJpaRepository subjectiveJpaRepository;
@@ -27,12 +28,10 @@ public class SubjectiveService {
         }
     }
 
-    @Transactional(readOnly = true)
     public Subjective getOneForTest() {
         return subjectiveJpaRepository.findById(1L).orElseThrow();
     }
 
-    @Transactional(readOnly = true)
     public SubjectiveDto getOneQuestion(Long memberId) {
         List<Long> subjectiveIds = answerJpaRepository.findAnsweredSubjectiveIdsByMemberId(memberId);
 
@@ -50,5 +49,9 @@ public class SubjectiveService {
         }
 
         return new SubjectiveDto(subjective);
+    }
+
+    public List<String> getAllCategories() {
+        return subjectiveJpaRepository.findAllCategories();
     }
 }

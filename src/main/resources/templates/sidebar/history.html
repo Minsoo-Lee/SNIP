@@ -21,7 +21,7 @@
               <div class="col-md-2">
                 <label class="form-label">날짜</label>
                 <select class="form-select" name="period">
-                  <option value="">전체</option>
+                  <option value="0">전체</option>
                   <option value="7">최근 7일</option>
                   <option value="30">최근 30일</option>
                 </select>
@@ -30,11 +30,11 @@
               <!-- 태그 -->
               <div class="col-md-2">
                 <label class="form-label">태그</label>
-                <select class="form-select" name="tag">
+                <select class="form-select" name="category">
                   <option value="">전체</option>
-                  <option th:each="tag : ${tags}"
-                          th:value="${tag}"
-                          th:text="${tag}">
+                  <option th:each="category : ${categories}"
+                          th:value="${category}"
+                          th:text="${category}">
                   </option>
                 </select>
               </div>

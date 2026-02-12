@@ -1,5 +1,6 @@
 package stackup.snip.dto.subjective;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

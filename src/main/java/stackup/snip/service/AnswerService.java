@@ -12,20 +12,24 @@ import stackup.snip.entity.Member;
 import stackup.snip.entity.Subjective;
 import stackup.snip.exception.subjective.AnswerBlankException;
 import stackup.snip.repository.jpa.AnswerJpaRepository;
+import stackup.snip.repository.jpa.AnswerQuerydslRepository;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class AnswerService {
 
     private final AnswerJpaRepository answerJpaRepository;
+    private final AnswerQuerydslRepository answerQuerydslRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final SubjectiveJpaRepository subjectiveJpaRepository;
 
@@ -43,7 +47,6 @@ public class AnswerService {
         updateMember.addStreakOnce();
     }
 
-    @Transactional(readOnly = true)
     public boolean isCompletedToday(Long memberId) {
         LocalDate today = LocalDateTime.now().toLocalDate();
         long count = answerJpaRepository.countAnswersByMemberIdAndCreatedAt(memberId, today.atStartOfDay(), today.plusDays(1).atStartOfDay());
@@ -51,7 +54,6 @@ public class AnswerService {
         return count > 0;
     }
 
-    @Transactional(readOnly = true)
     public boolean isCompletedYesterday(Long memberId) {
         LocalDate today = LocalDateTime.now().toLocalDate();
         long count = answerJpaRepository.countAnswersByMemberIdAndCreatedAt(memberId, today.minusDays(1).atStartOfDay(), today.atStartOfDay());
@@ -59,12 +61,10 @@ public class AnswerService {
         return count > 0;
     }
 
-    @Transactional(readOnly = true)
     public int countTotalAnswers(Long memberId) {
         return answerJpaRepository.countAnswersByMemberId(memberId);
     }
 
-    @Transactional(readOnly = true)
     public YesterdayDto getYesterdayDto(Long memberId) {
         LocalDate today = LocalDateTime.now().toLocalDate();
         return answerJpaRepository.
@@ -72,12 +72,10 @@ public class AnswerService {
                 .orElse(null);
     }
 
-    @Transactional(readOnly = true)
     public List<HistoryDto> getQuestionsAnswersWithMemberId(Long memberId) {
         return answerJpaRepository.findAnswerByMemberId(memberId);
     }
 
-    @Transactional(readOnly = true)
     public AnswerDto getAnswerDetail(Long answerId) {
         Answer findAnswer = answerJpaRepository.findAnswerById(answerId);
         return new AnswerDto(
@@ -86,5 +84,24 @@ public class AnswerService {
                 findAnswer.getContent(),
                 findAnswer.getCreatedAt()
         );
+    }
+
+    public List<HistoryDto> getSearchResult(
+            Long memberId, int days, String category, String question
+    ) {
+        List<Answer> findAnswers = answerQuerydslRepository.findByDateCategoryTitle(memberId, days, category, question);
+        List<HistoryDto> result = new ArrayList<>();
+
+        for (Answer findAnswer : findAnswers) {
+            result.add(new HistoryDto(
+                    findAnswer.getId(),
+                    findAnswer.getSubjective().getCategory(),
+                    findAnswer.getSubjective().getQuestion(),
+                    findAnswer.getContent(),
+                    findAnswer.getCreatedAt()
+            ));
+        }
+
+        return result;
     }
 }

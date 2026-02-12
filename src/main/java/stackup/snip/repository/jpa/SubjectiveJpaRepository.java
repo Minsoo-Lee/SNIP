@@ -30,4 +30,7 @@ public interface SubjectiveJpaRepository extends JpaRepository<Subjective, Long>
     List<Subjective> findUnansweredRandomAll(Long memberId);
 
     Optional<Subjective> findByQuestion(String question);
+
+    @Query("select distinct s.category from Subjective s")
+    List<String> findAllCategories();
 }
