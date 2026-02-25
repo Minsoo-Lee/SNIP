@@ -29,6 +29,7 @@ public class Member extends TimeBaseEntity {
 
     private Integer loginStreak;
     private Integer answerStreak;
+    private Integer maxAnswerStreak;
 
     //== 연관관계 ==//
     @OneToMany(mappedBy = "member")
