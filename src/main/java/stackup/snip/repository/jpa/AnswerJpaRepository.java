@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import stackup.snip.dto.home.YesterdayDto;
 import stackup.snip.dto.subjective.HistoryDto;
 import stackup.snip.entity.Answer;
-import stackup.snip.entity.Subjective;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,9 +37,27 @@ public interface AnswerJpaRepository extends JpaRepository<Answer, Long> {
     );
 
     @Query("select new stackup.snip.dto.subjective.HistoryDto(" +
-            "a.id, a.subjective.category, a.subjective.question, a.content, a.createdAt) from Answer a " +
+            "a.id, a.subjective.category, a.subjective.question, a.content, a.createdAt) " +
+            "from Answer a " +
             "where a.member.id = :memberId")
     List<HistoryDto> findAnswerByMemberId(@Param("memberId") Long memberId);
 
     Answer findAnswerById(Long id);
+
+    @Query("select count(a) " +
+            "from Answer a " +
+            "where a.content is not null " +
+            "and a.createdAt >= :start " +
+            "and a.createdAt < :end " +
+            "and a.member.id = :memberId")
+    Integer countMonthlyAnswersByMemberIdWithoutNull(Long memberId, LocalDateTime start, LocalDateTime end);
+
+
+    @Query("select avg(length(a.content)) " +
+            "from Answer a " +
+            "where a.content is not null " +
+            "and a.createdAt >= :start " +
+            "and a.createdAt < :end " +
+            "and a.member.id = :memberId")
+    Double findAverageAnswerLength(Long memberId, LocalDateTime start, LocalDateTime end);
 }

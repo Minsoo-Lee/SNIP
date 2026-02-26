@@ -40,7 +40,7 @@
                   <div class="p-4 bg-light rounded text-center h-100">
                     <div class="text-muted small mb-2">이번 달 완료</div>
                     <div class="fs-3 fw-bold"
-                         th:text="${thisMonthCompleted} + '개'">
+                         th:text="${MonthlyCount} + '개'">
                       12개
                     </div>
                   </div>
@@ -50,7 +50,7 @@
                   <div class="p-4 bg-light rounded text-center h-100">
                     <div class="text-muted small mb-2">지난 달 대비</div>
                     <div class="fs-3 fw-bold"
-                         th:text="${monthDiffRate} + '%'">
+                         th:text="${monthDiffRate}">
                       +15%
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                   <div class="p-4 bg-light rounded text-center h-100">
                     <div class="text-muted small mb-2">최근 30일 평균 작성 길이</div>
                     <div class="fs-3 fw-bold"
-                         th:text="${recentAvgLength} + '자'">
+                         th:text="${recentAvgLength}">
                       924자
                     </div>
                   </div>

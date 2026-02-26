@@ -16,11 +16,12 @@ import stackup.snip.repository.jpa.AnswerQuerydslRepository;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -103,5 +104,60 @@ public class AnswerService {
         }
 
         return result;
+    }
+
+    public int countMonthlyAnswers(Long memberId) {
+        LocalDate now = LocalDate.now();
+        LocalDateTime start = now.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime end = start.plusMonths(1);
+        return answerJpaRepository.countMonthlyAnswersByMemberIdWithoutNull(memberId, start, end);
+    }
+
+    public String getMonthDiffRate(Long memberId) {
+        int thisMonthCount = countMonthlyAnswers(memberId);
+
+        LocalDate last = LocalDate.now().minusMonths(1);
+        LocalDateTime start = last.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime end = start.plusMonths(1);
+
+        Integer lastMonthCount = answerJpaRepository.countMonthlyAnswersByMemberIdWithoutNull(memberId, start, end);
+
+        if (lastMonthCount == 0) {
+            return "지난 달 기록이 없어 비교할 수 없어요😭";
+        }
+
+        // 단순 숫자계산 - 소수 2째 자리까지만 표시
+        double monthDiffRate = (double) thisMonthCount / lastMonthCount;
+        monthDiffRate = getTwoDigit(monthDiffRate * 100);
+
+        return monthDiffRate + "%";
+    }
+
+    public String countAnswersLengthAvg(Long memberId) {
+        int days = 30;
+
+        LocalDateTime end = LocalDate.now().plusDays(1).atStartOfDay(); // 오늘 포함
+        LocalDateTime start = end.minusDays(days);
+
+        Double lenAvg = answerJpaRepository.findAverageAnswerLength(memberId, start, end);
+        if (lenAvg == null) {
+            return "아직 작성한 답안이 없어요😭";
+        }
+        lenAvg = getTwoDigit(lenAvg);
+
+        return lenAvg + "자";
+    }
+
+    public double getProgressRate(Long memberId) {
+        long allSubjectives = subjectiveJpaRepository.count();
+        int completedAnswers = answerJpaRepository.countAnswersByMemberId(memberId);
+        return getTwoDigit((double) completedAnswers / allSubjectives * 100);
+    }
+
+    private double getTwoDigit(double value) {
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+
+        return bd.doubleValue();
     }
 }
