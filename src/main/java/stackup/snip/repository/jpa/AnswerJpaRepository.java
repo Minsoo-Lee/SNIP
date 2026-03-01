@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import stackup.snip.dto.home.YesterdayDto;
 import stackup.snip.dto.subjective.HistoryDto;
+import stackup.snip.dto.subjective.MonthlyAnswersDto;
 import stackup.snip.entity.Answer;
 
 import java.time.LocalDateTime;
@@ -60,4 +61,14 @@ public interface AnswerJpaRepository extends JpaRepository<Answer, Long> {
             "and a.createdAt < :end " +
             "and a.member.id = :memberId")
     Double findAverageAnswerLength(Long memberId, LocalDateTime start, LocalDateTime end);
+
+    @Query("select new stackup.snip.dto.subjective.MonthlyAnswersDto" +
+            "(YEAR(a.createdAt), MONTH(a.createdAt), COUNT(a.content)) " +
+            "from Answer a " +
+            "where a.createdAt >= :start " +
+            "and a.createdAt < :end " +
+            "and a.member.id = :memberId " +
+            "group by YEAR(a.createdAt), MONTH(a.createdAt) " +
+            "order by YEAR(a.createdAt), MONTH(a.createdAt)")
+    List<MonthlyAnswersDto> countMonthlyAnswers(Long memberId, LocalDateTime start, LocalDateTime end);
 }

@@ -6,7 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import stackup.snip.dto.subjective.MonthlyTrendDto;
 import stackup.snip.service.AnswerService;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,6 +23,17 @@ public class GrowthController {
             @RequestAttribute("loginMemberId") Long memberId,
             Model model
     ) {
+        int MONTH_TREND = 6;
+        // 월별 완료 추이 (테스트)
+        List<String> months = List.of("1월","2월","3월","4월","5월","6월");
+        List<Integer> monthlyCounts = List.of(2,4,6,3,7,5);
+
+        // 월별 완료 추이 (실제 로직)
+        MonthlyTrendDto monthlyTrend = answerService.getMonthlyTrend(memberId, MONTH_TREND);
+
+        model.addAttribute("months", monthlyTrend.getMonths());
+        model.addAttribute("monthlyCounts", monthlyTrend.getCounts());
+
         // 이번 달 완료 개수
         int answerCount = answerService.countMonthlyAnswers(memberId);
         model.addAttribute("MonthlyCount", answerCount);

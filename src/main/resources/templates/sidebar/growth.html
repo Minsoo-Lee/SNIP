@@ -102,6 +102,45 @@
     </div>
 
   </div>
+  <script th:inline="javascript">
+      /* Controller에서 넘겨준 데이터 */
+      const months = [[${months}]];
+      const monthlyCounts = [[${monthlyCounts}]];
+
+      const ctx = document.getElementById('monthlyChart').getContext('2d');
+
+      new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: months,
+              datasets: [{
+                  label: '월별 완료 수',
+                  data: monthlyCounts,
+                  tension: 0.3,
+                  borderWidth: 2,
+                  fill: false,
+                  pointRadius: 4
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      ticks: {
+                          stepSize: 1
+                      }
+                  }
+              },
+              plugins: {
+                  legend: {
+                      display: true
+                  }
+              }
+          }
+      });
+  </script>
 </section>
 
 </html>

@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.home.YesterdayDto;
 import stackup.snip.dto.subjective.AnswerDto;
 import stackup.snip.dto.subjective.HistoryDto;
+import stackup.snip.dto.subjective.MonthlyAnswersDto;
+import stackup.snip.dto.subjective.MonthlyTrendDto;
 import stackup.snip.entity.Answer;
 import stackup.snip.entity.Member;
 import stackup.snip.entity.Subjective;
@@ -159,5 +161,57 @@ public class AnswerService {
         bd = bd.setScale(2, RoundingMode.HALF_UP);
 
         return bd.doubleValue();
+    }
+
+    public MonthlyTrendDto getMonthlyTrend(long memberId, int currentMonths) {
+        List<String> months = new ArrayList<>();
+        for (int i = 0; i < currentMonths; i++) {
+            String year = String.valueOf(LocalDateTime.now().minusMonths(i).getYear());
+            log.info("year = " + year);
+            String month = String.valueOf(LocalDateTime.now().minusMonths(i).getMonthValue());
+            log.info("month = " + month);
+            months.add(year + "-" + month);
+        }
+
+        for (String month : months) {
+            System.out.println(month);
+        }
+
+        months = months.reversed();
+
+        LocalDate now = LocalDate.now();
+
+        LocalDateTime start = now
+                .minusMonths(currentMonths)
+                .withDayOfMonth(1)
+                .atStartOfDay();
+
+        LocalDateTime end = now
+                .plusMonths(1)
+                .withDayOfMonth(1)
+                .atStartOfDay();
+
+        MonthlyTrendDto monthlyTrend = new MonthlyTrendDto();
+        MonthlyTrendDto monthlyTrendFromJpa = new MonthlyTrendDto();
+
+        List<MonthlyAnswersDto> monthlyAnswersDtos = answerJpaRepository.countMonthlyAnswers(memberId, start, end);
+
+        for (MonthlyAnswersDto monthlyAnswersDto : monthlyAnswersDtos) {
+            monthlyTrendFromJpa.addMonth(monthlyAnswersDto.year() + "-" + monthlyAnswersDto.month());
+            monthlyTrendFromJpa.addCount(Math.toIntExact(monthlyAnswersDto.count()));
+        }
+
+        for (int i = 0; i < months.size(); i++) {
+            monthlyTrend.addMonth(months.get(i));
+            int count = monthlyTrendFromJpa.ifContainsMonth(months.get(i)) ? monthlyTrendFromJpa.getCountFromMonth(months.get(i)) : 0;
+            monthlyTrend.addCount(count);
+//            if (monthlyTrendFromJpa.ifContainsMonth(months.get(i))) {
+//                monthlyTrend.addCount(monthlyTrendFromJpa.getCountFromMonth(months.get(i)));
+//            } else {
+//
+//                monthlyTrend.addCount(0);
+//            }
+        }
+        return monthlyTrend;
     }
 }
