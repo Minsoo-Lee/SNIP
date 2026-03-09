@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/base :: layout(~{::section})">
+
+<section>
+
+  <h2 class="mb-4">계정 설정</h2>
+
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link"
+         th:classappend="${tab == 'nickname'} ? 'active'"
+         th:href="@{/settings/account(tab='nickname')}">
+        닉네임 변경
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"
+         th:classappend="${tab == 'password'} ? 'active'"
+         th:href="@{/settings/account(tab='password')}">
+        비밀번호 변경
+      </a>
+    </li>
+  </ul>
+
+  <div th:switch="${tab}">
+    <div th:case="'nickname'">
+      <div th:replace="sidebar/settings/nickname :: nicknameForm"></div>
+    </div>
+    <div th:case="'password'">
+      <div th:replace="sidebar/settings/password :: passwordForm"></div>
+    </div>
+  </div>
+
+</section>
+</html>

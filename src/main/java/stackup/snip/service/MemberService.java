@@ -12,9 +12,11 @@ import stackup.snip.exception.login.NicknameDuplicateException;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
@@ -34,7 +36,6 @@ public class MemberService {
         return memberJpaRepository.save(new Member(email, nickname, password, registeredTime));
     }
 
-    @Transactional(readOnly = true)
     public Member login(String email, String password) {
         // email이 존재하는지 확인
         Member member = memberJpaRepository.findByEmail(email)
@@ -48,8 +49,18 @@ public class MemberService {
         return member;
     }
 
-    @Transactional(readOnly = true)
     public int getAnswerStreak(Long memberId) {
         return memberJpaRepository.getAnswerStreakByMemberId(memberId);
+    }
+
+    public boolean checkMatchPassword(Long memberId, String password) {
+        String checkPassword = memberJpaRepository.findPasswordById(memberId);
+        return Objects.equals(checkPassword, password);
+    }
+
+    @Transactional
+    public void changeNickname(Long memberId, String newNickname) {
+        Member member = memberJpaRepository.findById(memberId).orElseThrow();
+        member.updateNickname(newNickname);
     }
 }

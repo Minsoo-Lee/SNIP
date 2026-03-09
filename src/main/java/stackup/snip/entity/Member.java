@@ -52,4 +52,9 @@ public class Member extends TimeBaseEntity {
     public void addStreakOnce() {
         this.answerStreak++;
     }
+
+    //== Dirty Checking ==//
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

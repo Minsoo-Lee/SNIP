@@ -22,4 +22,7 @@ public interface MemberJpaRepository extends JpaRepository<Member, Long> {
 
     @Query("select m.answerStreak from Member m where m.id = :memberId")
     int getAnswerStreakByMemberId(@Param("memberId") Long memberId);
+
+    @Query("select m.password from Member m where m.id = :memberId")
+    String findPasswordById(Long memberId);
 }
