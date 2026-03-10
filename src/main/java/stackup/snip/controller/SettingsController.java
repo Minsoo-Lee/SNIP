@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import stackup.snip.service.MemberService;
 
 @Controller
@@ -51,5 +52,29 @@ public class SettingsController {
         memberService.changeNickname(memberId, newNickname);
         session.setAttribute("userName", newNickname);
         return "redirect:/settings/account?tab=nickname";
+    }
+
+    @PostMapping("/password")
+    public String changePassword(
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            @RequestAttribute("loginMemberId") Long memberId,
+            RedirectAttributes redirectAttributes
+    ) {
+        log.info("change Password");
+        if (!memberService.checkMatchPassword(memberId, currentPassword)) {
+            redirectAttributes.addFlashAttribute("error", "settings.password.notMatch");
+            return "redirect:/settings/account?tab=password";
+        } if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("error", "settings.password.confirm.notMatch");
+            return "redirect:/settings/account?tab=password";
+        } if (newPassword.equals(currentPassword)) {
+            redirectAttributes.addFlashAttribute("error", "settings.password.sameAsOld");
+            return "redirect:/settings/account?tab=password";
+        }
+        memberService.changePassword(memberId, newPassword);
+        redirectAttributes.addFlashAttribute("success", true);
+        return "redirect:/settings/account?tab=password";
     }
 }

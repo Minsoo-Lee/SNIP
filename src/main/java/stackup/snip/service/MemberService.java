@@ -63,4 +63,9 @@ public class MemberService {
         Member member = memberJpaRepository.findById(memberId).orElseThrow();
         member.updateNickname(newNickname);
     }
+
+    public void changePassword(Long memberId, String newPassword) {
+        Member member = memberJpaRepository.findById(memberId).orElseThrow();
+        member.updatePassword(newPassword);
+    }
 }

@@ -31,7 +31,7 @@ public class TestDataInit implements CommandLineRunner {
         );
         Member admin = new Member(
                 "admin@admin.dev",
-                "test",
+                "admin",
                 "1234",
                 LocalDateTime.now()
         );

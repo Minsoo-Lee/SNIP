@@ -7,6 +7,8 @@
   <h2 class="mb-4">계정 설정</h2>
 
   <ul class="nav nav-tabs mb-4">
+
+
     <li class="nav-item">
       <a class="nav-link"
          th:classappend="${tab == 'nickname'} ? 'active'"
@@ -20,6 +22,15 @@
          th:href="@{/settings/account(tab='password')}">
         비밀번호 변경
       </a>
+    </li>
+
+    <!-- 오른쪽 로그아웃 -->
+    <li class="nav-item ms-auto">
+      <form th:action="@{/logout}" method="post">
+        <button class="btn btn-outline-danger">
+          로그아웃
+        </button>
+      </form>
     </li>
   </ul>
 
