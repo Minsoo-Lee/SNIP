@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/base :: layout(~{::section})">
+
+<section>
+
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+
+          <h3 class="mb-4 text-center">관리자 계정을 확인합니다.</h3>
+
+          <form th:action="@{/admin/check}" method="post">
+
+            <div class="mb-3">
+              <label class="form-label">비밀번호</label>
+              <input type="password"
+                     name="password"
+                     class="form-control"
+                     required>
+            </div>
+
+            <div th:if="${error}" class="text-danger mb-3">
+              <span th:text="#{${error}}"></span>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary w-100">
+              확인
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+</html>

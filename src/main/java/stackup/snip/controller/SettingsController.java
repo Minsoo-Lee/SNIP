@@ -19,7 +19,6 @@ public class SettingsController {
 
     @GetMapping
     public String settingHome() {
-        log.info("settingHome.class");
         return "sidebar/settings/checkPassword";
     }
 

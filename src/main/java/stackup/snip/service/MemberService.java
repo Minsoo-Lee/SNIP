@@ -68,4 +68,9 @@ public class MemberService {
         Member member = memberJpaRepository.findById(memberId).orElseThrow();
         member.updatePassword(newPassword);
     }
+
+    public boolean checkAdminPassword(Long memberId, String password) {
+        Member member = memberJpaRepository.getReferenceById(memberId);
+        return password.equals(member.getPassword());
+    }
 }

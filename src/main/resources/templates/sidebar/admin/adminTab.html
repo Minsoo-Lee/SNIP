@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/base :: layout(~{::section})">
+
+<section>
+
+  <h2 class="mb-4">관리자 페이지</h2>
+
+  <ul class="nav nav-tabs mb-4">
+
+
+    <li class="nav-item">
+      <a class="nav-link"
+         th:classappend="${tab == 'members'} ? 'active'"
+         th:href="@{/admin/manage(tab='members')}">
+        유저 관리
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"
+         th:classappend="${tab == 'subjectives'} ? 'active'"
+         th:href="@{/settings/manage(tab='subjectives')}">
+        문제 관리
+      </a>
+    </li>
+  </ul>
+
+  <div th:switch="${tab}">
+    <div th:case="'members'">
+      <div th:replace="sidebar/admin/members :: usersForm"></div>
+    </div>
+    <div th:case="'subjectives'">
+      <div th:replace="sidebar/admin/subjectives :: subjectivesForm"></div>
+    </div>
+  </div>
+
+</section>
+</html>
