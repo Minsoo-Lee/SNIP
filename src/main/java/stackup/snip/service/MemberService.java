@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import stackup.snip.dto.member.MemberDetailDto;
 import stackup.snip.dto.member.MemberListDto;
+import stackup.snip.dto.member.MemberSaveDto;
 import stackup.snip.entity.Member;
 import stackup.snip.exception.login.EmailDuplicateException;
 import stackup.snip.exception.login.EmailNotExistException;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -99,5 +101,20 @@ public class MemberService {
             memberDetailDto.setLastLoginDate(member.getLastLoginDate());
         }
         return memberDetailDto;
+    }
+
+    public void saveMember(MemberSaveDto memberSaveDto) {
+        memberJpaRepository.save(new Member(
+                memberSaveDto.getEmail(),
+                memberSaveDto.getNickname(),
+                memberSaveDto.getPassword(),
+                LocalDateTime.now()
+        ));
+    }
+
+    public void updateMember(MemberSaveDto memberSaveDto) {
+        Member member = memberJpaRepository.findById(Long.valueOf(memberSaveDto.getId())).orElseThrow();
+//        member.update
+
     }
 }

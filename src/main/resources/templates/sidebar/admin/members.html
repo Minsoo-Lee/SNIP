@@ -76,6 +76,12 @@
           <input type="hidden" name="id" th:value="${selectedMember.id}"/>
 
           <div class="mb-2">
+            <label>이메일</label>
+            <input type="text" name="email" class="form-control"
+                   th:value="${selectedMember.email}"/>
+          </div>
+
+          <div class="mb-2">
             <label>닉네임</label>
             <input type="text" name="nickname" class="form-control"
                    th:value="${selectedMember.nickname}" required/>
@@ -83,18 +89,29 @@
 
           <div class="mb-2" th:if="${selectedMember.id == null}">
             <label>비밀번호</label>
-            <input type="password" name="password" class="form-control" required/>
+            <input type="password" name="password" class="form-control" required
+                   th:classappend="${passwordError != null} ? 'is-invalid'"/>
+          </div>
+
+          <div class="mb-2" th:if="${selectedMember.id == null}">
+            <label>비밀번호 확인</label>
+            <input type="password" name="confirmPassword" class="form-control" required
+                   th:classappend="${passwordError != null} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:if="${passwordError != null}" th:text="${passwordError}"></div>
           </div>
 
           <!-- 비밀번호 변경 -->
           <div class="mb-2" th:if="${selectedMember.id != null}">
             <label>새 비밀번호</label>
-            <input type="password" name="newPassword" class="form-control"/>
+            <input type="password" name="password" class="form-control"
+                   th:classappend="${passwordError != null} ? 'is-invalid'"/>
           </div>
 
           <div class="mb-2" th:if="${selectedMember.id != null}">
             <label>비밀번호 확인</label>
-            <input type="password" name="confirmPassword" class="form-control"/>
+            <input type="password" name="confirmPassword" class="form-control"
+                   th:classappend="${passwordError != null} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:if="${passwordError != null}" th:text="${passwordError}"></div>
           </div>
 
         </form>
