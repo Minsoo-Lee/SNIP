@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import stackup.snip.dto.member.MemberDetailDto;
+import stackup.snip.dto.member.MemberListDto;
 import stackup.snip.entity.Member;
 import stackup.snip.exception.login.EmailDuplicateException;
 import stackup.snip.exception.login.EmailNotExistException;
@@ -12,6 +14,8 @@ import stackup.snip.exception.login.NicknameDuplicateException;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -72,5 +76,28 @@ public class MemberService {
     public boolean checkAdminPassword(Long memberId, String password) {
         Member member = memberJpaRepository.getReferenceById(memberId);
         return password.equals(member.getPassword());
+    }
+
+    public List<MemberListDto> getAllMembers() {
+        List<Member> members = memberJpaRepository.findAll();
+        return members.stream().map(m -> new MemberListDto(
+                m.getId(),
+                m.getNickname(),
+                m.getEmail(),
+                m.getLastLoginDate())
+        ).toList();
+    }
+
+    public MemberDetailDto getMemberDetailDto(String memberId) {
+        MemberDetailDto memberDetailDto = new MemberDetailDto();
+        if (memberId != null) {
+            Member member = memberJpaRepository.getReferenceById(Long.valueOf(memberId));
+            memberDetailDto.setId(member.getId());
+            memberDetailDto.setNickname(member.getNickname());
+            memberDetailDto.setEmail(member.getEmail());
+            memberDetailDto.setCreatedAt(member.getCreatedAt());
+            memberDetailDto.setLastLoginDate(member.getLastLoginDate());
+        }
+        return memberDetailDto;
     }
 }

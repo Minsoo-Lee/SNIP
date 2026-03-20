@@ -5,7 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import stackup.snip.dto.member.MemberDetailDto;
+import stackup.snip.dto.member.MemberListDto;
 import stackup.snip.service.MemberService;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,8 +31,8 @@ public class AdminController {
             @RequestAttribute("loginMemberId") Long memberId
     ) {
         if (memberService.checkAdminPassword(memberId, password)) {
-            model.addAttribute("tab", "users");
-            return "sidebar/admin/adminTab";
+//            model.addAttribute("tab", "users");
+            return "redirect:/admin/manage?tab=members";
         }
         model.addAttribute("error", "settings.password.notMatch");
         return "sidebar/admin/checkAdmin";
@@ -37,12 +41,16 @@ public class AdminController {
     @GetMapping("/manage")
     public String switchTab(
             @RequestParam(defaultValue = "members") String tab,
+            @RequestParam(required = false) String memberId,
             Model model
     ) {
         model.addAttribute("tab", tab);
         if (tab.equals("members")) {
-            memberService.
-            model.addAttribute("users", )
+
+            List<MemberListDto> members = memberService.getAllMembers();
+            MemberDetailDto memberDetailDto = memberService.getMemberDetailDto(memberId);
+            model.addAttribute("members", members);
+            model.addAttribute("selectedMember", memberDetailDto);
         } else if (tab.equals("subjectives")) {
 
         }
