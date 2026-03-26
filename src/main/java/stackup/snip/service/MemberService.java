@@ -1,12 +1,12 @@
 package stackup.snip.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import stackup.snip.dto.member.MemberDetailDto;
-import stackup.snip.dto.member.MemberListDto;
+import stackup.snip.dto.member.MemberFormDto;
 import stackup.snip.dto.member.MemberSaveDto;
+import stackup.snip.dto.member.MemberListDto;
 import stackup.snip.entity.Member;
 import stackup.snip.exception.login.EmailDuplicateException;
 import stackup.snip.exception.login.EmailNotExistException;
@@ -15,12 +15,11 @@ import stackup.snip.exception.login.NicknameDuplicateException;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
@@ -70,6 +69,7 @@ public class MemberService {
         member.updateNickname(newNickname);
     }
 
+    @Transactional
     public void changePassword(Long memberId, String newPassword) {
         Member member = memberJpaRepository.findById(memberId).orElseThrow();
         member.updatePassword(newPassword);
@@ -90,31 +90,25 @@ public class MemberService {
         ).toList();
     }
 
-    public MemberDetailDto getMemberDetailDto(String memberId) {
-        MemberDetailDto memberDetailDto = new MemberDetailDto();
-        if (memberId != null) {
-            Member member = memberJpaRepository.getReferenceById(Long.valueOf(memberId));
-            memberDetailDto.setId(member.getId());
-            memberDetailDto.setNickname(member.getNickname());
-            memberDetailDto.setEmail(member.getEmail());
-            memberDetailDto.setCreatedAt(member.getCreatedAt());
-            memberDetailDto.setLastLoginDate(member.getLastLoginDate());
-        }
-        return memberDetailDto;
-    }
-
-    public void saveMember(MemberSaveDto memberSaveDto) {
+    @Transactional
+    public void save(MemberFormDto memberForm) {
         memberJpaRepository.save(new Member(
-                memberSaveDto.getEmail(),
-                memberSaveDto.getNickname(),
-                memberSaveDto.getPassword(),
+                memberForm.getEmail(),
+                memberForm.getNickname(),
+                memberForm.getPassword(),
                 LocalDateTime.now()
         ));
     }
 
-    public void updateMember(MemberSaveDto memberSaveDto) {
-        Member member = memberJpaRepository.findById(Long.valueOf(memberSaveDto.getId())).orElseThrow();
-//        member.update
-
+    public MemberFormDto getMemberById(Long id) {
+        Member member = memberJpaRepository.findById(id).orElseThrow();
+        log.info("[service] member = " + member);
+        return new MemberFormDto(
+                member.getId(),
+                member.getEmail(),
+                member.getNickname(),
+                member.getCreatedAt(),
+                member.getLastLoginDate()
+        );
     }
 }

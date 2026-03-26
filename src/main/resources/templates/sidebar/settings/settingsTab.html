@@ -36,10 +36,10 @@
 
   <div th:switch="${tab}">
     <div th:case="'nickname'">
-      <div th:replace="sidebar/settings/nickname :: nicknameForm"></div>
+      <div th:replace="sidebar/settings/fragments/nickname :: nicknameForm"></div>
     </div>
     <div th:case="'password'">
-      <div th:replace="sidebar/settings/password :: passwordForm"></div>
+      <div th:replace="sidebar/settings/fragments/password :: passwordForm"></div>
     </div>
   </div>
 

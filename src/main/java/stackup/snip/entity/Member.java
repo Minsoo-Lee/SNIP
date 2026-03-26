@@ -3,6 +3,7 @@ package stackup.snip.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
+import lombok.ToString;
 import stackup.snip.entity.base.TimeBaseEntity;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@ToString
 public class Member extends TimeBaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +31,6 @@ public class Member extends TimeBaseEntity {
 
     private Integer loginStreak;
     private Integer answerStreak;
-    private Integer maxAnswerStreak;
 
     //== 연관관계 ==//
     @OneToMany(mappedBy = "member")

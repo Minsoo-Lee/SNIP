@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="adminNav">
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link"
+         th:classappend="${currentTab == 'members'} ? 'active'"
+         th:href="@{/admin/members}">
+        유저 관리
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"
+         th:classappend="${currentTab == 'subjectives'} ? 'active'"
+         th:href="@{/admin/subjectives}">
+        문제 관리
+      </a>
+    </li>
+  </ul>
+</div>
+
+</html>

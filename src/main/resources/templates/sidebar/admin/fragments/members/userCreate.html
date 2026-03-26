@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="userCreate">
+
+  <!-- 성공 메시지 -->
+  <div th:if="${successMessage != null}"
+       class="alert alert-success d-flex align-items-center justify-content-between shadow-sm border-0 rounded-3 px-4 py-3 mb-4"
+       role="alert"
+       style="font-size: 1.05rem;">
+
+    <div class="d-flex align-items-center">
+      <span class="me-3 fs-3">✅</span>
+      <div>
+        <div class="fw-bold">저장 완료</div>
+        <div th:text="${successMessage}" class="small"></div>
+      </div>
+    </div>
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <h5>유저 추가</h5>
+
+  <div class="card p-3">
+    <form th:action="@{/admin/members}" th:object="${memberForm}" method="post">
+
+      <div class="mb-2">
+        <label>이메일</label>
+        <input type="email" th:field="*{email}" class="form-control"/>
+      </div>
+
+      <div class="mb-2">
+        <label>닉네임</label>
+        <input type="text" th:field="*{nickname}" class="form-control" required/>
+      </div>
+
+      <div class="mb-2">
+        <label>비밀번호</label>
+        <input type="password" th:field="*{password}" class="form-control"
+               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"/>
+
+      </div>
+
+
+      <div class="mb-2">
+        <label>비밀번호 확인</label>
+        <input type="password" th:field="*{confirmPassword}" class="form-control"
+               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"/>
+        <div class="invalid-feedback"
+             th:if="${#fields.hasErrors('confirmPassword')}"
+             th:errors="*{confirmPassword}"></div>
+      </div>
+
+      <button type="submit" class="btn btn-success mt-2">저장</button>
+
+    </form>
+  </div>
+
+</div>
+
+</html>

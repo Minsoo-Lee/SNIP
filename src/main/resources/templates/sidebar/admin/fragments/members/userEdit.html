@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="userEdit">
+
+  <!-- 성공 메시지 -->
+  <div th:if="${successMessage != null}"
+       class="alert alert-success d-flex align-items-center justify-content-between shadow-sm border-0 rounded-3 px-4 py-3 mb-4"
+       role="alert"
+       style="font-size: 1.05rem;">
+
+    <div class="d-flex align-items-center">
+      <span class="me-3 fs-3">✅</span>
+      <div>
+        <div class="fw-bold">저장 완료</div>
+        <div th:text="${successMessage}" class="small"></div>
+      </div>
+    </div>
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <h5>유저 수정</h5>
+
+  <!-- 수정 폼 -->
+  <div class="card p-3 mb-3">
+    <form th:action="@{/admin/members/{id}(id=${memberForm.id})}"
+          th:object="${memberForm}" method="post">
+
+      <div class="mb-2">
+        <label>닉네임</label>
+        <input type="text" th:field="*{nickname}" class="form-control" required/>
+      </div>
+
+      <div class="mb-2">
+        <label>새 비밀번호</label>
+        <input type="password" th:field="*{password}" class="form-control"
+               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"/>
+      </div>
+
+      <div class="mb-2">
+        <label>비밀번호 확인</label>
+        <input type="password" th:field="*{confirmPassword}" class="form-control"
+               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"/>
+        <div class="invalid-feedback"
+             th:if="${#fields.hasErrors('confirmPassword')}"
+             th:errors="*{confirmPassword}"></div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <button type="submit" class="btn btn-success">저장</button>
+        <button type="button" class="btn btn-danger"
+                data-bs-toggle="modal" data-bs-target="#deleteModal">삭제</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- 계정 정보 -->
+  <div class="card p-3 bg-light">
+    <h6 class="mb-3 border-bottom pb-2">계정 정보</h6>
+    <div class="row mb-2">
+      <div class="col-4 text-muted">회원번호</div>
+      <div class="col-8 fw-semibold" th:text="${memberForm.id}"></div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-4 text-muted">이메일</div>
+      <div class="col-8 fw-semibold" th:text="${memberForm.email}"></div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-4 text-muted">닉네임</div>
+      <div class="col-8 fw-semibold" th:text="${memberForm.nickname}"></div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-4 text-muted">가입일</div>
+      <div class="col-8"
+           th:text="${#temporals.format(memberForm.createdAt, 'yyyy-MM-dd HH:mm')}"></div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-4 text-muted">마지막 로그인</div>
+      <div class="col-8"
+           th:text="${#temporals.format(memberForm.lastLoginDate, 'yyyy-MM-dd HH:mm')}"></div>
+    </div>
+  </div>
+
+  <!-- 삭제 모달 -->
+  <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">삭제 확인</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <strong th:text="${memberForm.nickname}"></strong> 유저를 정말 삭제하시겠습니까?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <form th:action="@{/admin/members/{id}/delete(id=${memberForm.id})}" method="post">
+            <button type="submit" class="btn btn-danger">삭제</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</html>

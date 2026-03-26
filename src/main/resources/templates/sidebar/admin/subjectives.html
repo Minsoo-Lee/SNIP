@@ -1,80 +1,13 @@
-<div th:fragment="subjectivesForm">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/base :: layout(~{::section})">
+<section>
 
-  <div class="row">
+  <h2 class="mb-4">관리자 페이지</h2>
 
-    <!-- 🔹 좌측: 리스트 (ID 제거) -->
-    <div class="col-6 border-end">
+  <div th:replace="~{admin/fragments/adminNav :: adminNav}"></div>
 
-      <div class="d-flex justify-content-between mb-2">
-        <h5>문제 목록</h5>
-        <a class="btn btn-sm btn-primary"
-           th:href="@{/admin/manage(tab='subjectives')}">
-          + 추가
-        </a>
-      </div>
+  <div th:replace="~{admin/fragments/subjectives/subjectivesForm :: subjectivesForm}"></div>
 
-      <table class="table table-hover">
-        <thead>
-        <tr>
-          <th>카테고리</th>
-          <th>질문</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr th:each="q : ${subjectives}"
-            style="cursor:pointer;"
-            th:onclick="|location.href='@{/admin/manage(tab='subjectives', subjectiveId=${q.id})}'|">
-
-          <td th:text="${q.category}"></td>
-          <td th:text="${#strings.abbreviate(q.question, 40)}"></td>
-
-        </tr>
-        </tbody>
-      </table>
-
-    </div>
-
-    <!-- 🔹 우측: 상세 -->
-    <div class="col-6">
-
-      <h5 th:text="${selectedSubjective.id != null ? '문제 수정' : '문제 추가'}"></h5>
-
-      <form th:action="@{/admin/subjectives/save}" method="post">
-
-        <!-- ID는 여기서만 -->
-        <div class="mb-2" th:if="${selectedSubjective.id != null}">
-          <label>ID</label>
-          <input type="text" class="form-control"
-                 th:value="${selectedSubjective.id}" readonly/>
-        </div>
-
-        <input type="hidden" name="id" th:value="${selectedSubjective.id}"/>
-
-        <div class="mb-2">
-          <label>카테고리</label>
-          <input type="text" name="category" class="form-control"
-                 th:value="${selectedSubjective.category}" required/>
-        </div>
-
-        <div class="mb-3">
-          <label>질문</label>
-          <textarea name="question" class="form-control" rows="5" required
-                    th:text="${selectedSubjective.question}"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-success">저장</button>
-
-      </form>
-
-      <form th:if="${selectedSubjective.id != null}"
-            th:action="@{/admin/subjectives/delete}" method="post" class="mt-2">
-        <input type="hidden" name="id" th:value="${selectedSubjective.id}"/>
-        <button type="submit" class="btn btn-danger">삭제</button>
-      </form>
-
-    </div>
-
-  </div>
-
-</div>
+</section>
+</html>
