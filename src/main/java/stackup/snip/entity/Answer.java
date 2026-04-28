@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "subjective_id"})
-        }
-)
+//@Table(
+//        uniqueConstraints = {
+//                @UniqueConstraint(columnNames = {"member_id", "subjective_id"})
+//        }
+//)
 public class Answer extends TimeBaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="subjectiveList">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">문제 목록</h5>
+    <a class="btn btn-sm btn-primary" th:href="@{/admin/subjectives}">
+      + 추가
+    </a>
+  </div>
+
+  <table class="table table-hover align-middle">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>카테고리</th>
+      <th>제목</th>
+      <th>수정일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${subjectives}"
+        style="cursor:pointer;"
+        th:classappend="${selectedId == s.id} ? 'table-primary'"
+        th:onclick="|location.href='@{/admin/subjectives/{id}(id=${s.id})}'|">
+
+      <td th:text="${s.id}"></td>
+      <td th:text="${s.category}"></td>
+      <td th:text="${s.question}"></td>
+      <td th:text="${#temporals.format(s.updatedAt, 'yyyy-MM-dd')}"></td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+</html>

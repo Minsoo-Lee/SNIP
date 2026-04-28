@@ -26,10 +26,10 @@ public class NotionService {
     public List<SubjectiveDto> getDatabasePages() {
         String jsonResponse = notionClient.queryDatabase();
 
-        // 디버깅: 실제 응답 출력
-        System.out.println("=== Notion API Response ===");
-        System.out.println(jsonResponse);
-        System.out.println("===========================");
+//        // 디버깅: 실제 응답 출력
+//        System.out.println("=== Notion API Response ===");
+//        System.out.println(jsonResponse);
+//        System.out.println("===========================");
 
         return parseNotionResponse(jsonResponse);
     }
@@ -46,9 +46,9 @@ public class NotionService {
 
             for (JsonNode result : results) {
                 // 디버깅: 각 페이지의 properties 출력
-                System.out.println("=== Page Properties ===");
-                System.out.println(result.get("properties").toPrettyString());
-                System.out.println("=======================");
+//                System.out.println("=== Page Properties ===");
+//                System.out.println(result.get("properties").toPrettyString());
+//                System.out.println("=======================");
 
                 SubjectiveDto page = new SubjectiveDto();
 //                page.setId(result.get("id").asText());

@@ -3,11 +3,13 @@ package stackup.snip.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import stackup.snip.dto.subjective.AdminSubjectiveDto;
 import stackup.snip.dto.subjective.SubjectiveDto;
 import stackup.snip.entity.Subjective;
 import stackup.snip.repository.jpa.AnswerJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,5 +55,16 @@ public class SubjectiveService {
 
     public List<String> getAllCategories() {
         return subjectiveJpaRepository.findAllCategories();
+    }
+
+    public List<AdminSubjectiveDto> getAllSubjectives() {
+        List<Subjective> all = subjectiveJpaRepository.findAll();
+        List<AdminSubjectiveDto> subjectiveDtos = new ArrayList<>();
+        for (Subjective subjective : all) {
+            subjectiveDtos.add(
+                    new AdminSubjectiveDto(subjective)
+            );
+        }
+        return subjectiveDtos;
     }
 }

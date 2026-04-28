@@ -14,10 +14,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create   # 개발: update / 운영: validate
-    show-sql: true
+    show-sql: false # true로
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false # true로
   profiles:
     active: dev
 

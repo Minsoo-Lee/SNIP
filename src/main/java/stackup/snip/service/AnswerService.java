@@ -40,13 +40,16 @@ public class AnswerService {
     public void saveAnswer(Long memberId, String question, String content) {
         if (content.isBlank())
             throw new AnswerBlankException();
-        Member member = memberJpaRepository.findById(memberId).orElseThrow();
-        Subjective subjective = subjectiveJpaRepository.findByQuestion(question).orElseThrow();
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. id=" + memberId));
+        Subjective subjective = subjectiveJpaRepository.findByQuestion(question)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Question이 존재하지 않습니다."));
         Answer answer = new Answer(subjective, member, content);
         answerJpaRepository.save(answer);
 
         // 유저 streak 증가
-        Member updateMember = memberJpaRepository.findById(memberId).orElseThrow();
+        Member updateMember = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. id=" + memberId));
         updateMember.addStreakOnce();
     }
 

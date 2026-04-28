@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import stackup.snip.dto.member.MemberFormDto;
-import stackup.snip.dto.member.MemberSaveDto;
 import stackup.snip.dto.member.MemberListDto;
 import stackup.snip.service.MemberService;
 
@@ -16,41 +15,30 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/admin/members")
 @Slf4j
-public class AdminController {
+public class AdminMemberController {
 
     private final MemberService memberService;
 
     @GetMapping
-    public String adminHome() {
-        return "sidebar/admin/checkAdmin";
-    }
-
-    @PostMapping("/check")
-    public String checkAdmin(
-            @RequestParam String password,
-            Model model,
-            @RequestAttribute("loginMemberId") Long memberId
+    public String memberList(
+            @RequestParam(defaultValue = "active") String filter,
+            Model model
     ) {
-        if (memberService.checkAdminPassword(memberId, password)) {
-//            model.addAttribute("tab", "users");
-            return "redirect:/admin/members";
-        }
-        model.addAttribute("error", "settings.password.notMatch");
-        return "sidebar/admin/checkAdmin";
-    }
-
-    @GetMapping("/members")
-    public String memberList(Model model) {
-        List<MemberListDto> members = memberService.getAllMembers();
+        List<MemberListDto> members = switch (filter) {
+            case "deleted" -> memberService.getAllDeletedMembers();
+            case "all" -> memberService.getAllMembers();
+            default -> memberService.getAllActiveMembers();
+        };
         model.addAttribute("members", members);
         model.addAttribute("memberForm", new MemberFormDto());
+        model.addAttribute("filter", filter);
 
         return "sidebar/admin/members";
     }
 
-    @PostMapping("/members")
+    @PostMapping
     public String saveMember(
             @ModelAttribute("memberForm") MemberFormDto memberForm,
             BindingResult result,
@@ -63,7 +51,7 @@ public class AdminController {
         if (result.hasErrors()) {
             log.info("에러 발생!!!!!");
             log.info("에러 목록: {}", result.getAllErrors()); // ✅ 추가
-            model.addAttribute("members", memberService.getAllMembers());
+            model.addAttribute("members", memberService.getAllDeletedMembers());
             model.addAttribute("memberForm", memberForm);
             model.addAttribute("currentTab", "members");
             return "sidebar/admin/members";
@@ -73,21 +61,22 @@ public class AdminController {
         return "redirect:/admin/members";
     }
 
-    @GetMapping("/members/{id}")
+    @GetMapping("/{id}")
     public String memberDetail(
             @PathVariable Long id,
             Model model
     ) {
         log.info("model = {}", model.asMap());
-        List<MemberListDto> members = memberService.getAllMembers();
+        List<MemberListDto> members = memberService.getAllActiveMembers();
         MemberFormDto memberDetailDto = memberService.getMemberById(id);
         model.addAttribute("members", members);
         model.addAttribute("memberForm", memberDetailDto);
+        model.addAttribute("filter", "active");
         model.addAttribute("selectedId", id);
         return "sidebar/admin/members";
     }
 
-    @PostMapping("/members/{id}")
+    @PostMapping("/{id}")
     public String memberEdit(
             @PathVariable Long id,
             @ModelAttribute("memberForm") MemberFormDto memberForm,
@@ -102,7 +91,7 @@ public class AdminController {
         if (result.hasErrors()) {
             memberForm.setId(id);
             model.addAttribute("memberForm", memberForm);
-            model.addAttribute("members", memberService.getAllMembers());
+            model.addAttribute("members", memberService.getAllDeletedMembers());
             model.addAttribute("selectedId", id);
             model.addAttribute("currentTab", "members");
             return "sidebar/admin/members";
@@ -111,9 +100,13 @@ public class AdminController {
         if (memberForm.getNickname() != null) {
             memberService.changeNickname(id, memberForm.getNickname());
         }
-//        model.addAttribute("members", memberService.getAllMembers());
-//        model.addAttribute("selectedId", id);
         redirectAttributes.addFlashAttribute("successMessage", "수정이 완료되었습니다.");  // ✅ 추가
         return "redirect:/admin/members/{id}";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteUser(@PathVariable Long id) {
+        memberService.deleteMember(id);
+        return "redirect:/admin/members";
     }
 }

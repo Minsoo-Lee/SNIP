@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.member.MemberFormDto;
-import stackup.snip.dto.member.MemberSaveDto;
 import stackup.snip.dto.member.MemberListDto;
 import stackup.snip.entity.Member;
 import stackup.snip.exception.login.EmailDuplicateException;
@@ -65,13 +64,15 @@ public class MemberService {
 
     @Transactional
     public void changeNickname(Long memberId, String newNickname) {
-        Member member = memberJpaRepository.findById(memberId).orElseThrow();
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. id=" + memberId));
         member.updateNickname(newNickname);
     }
 
     @Transactional
     public void changePassword(Long memberId, String newPassword) {
-        Member member = memberJpaRepository.findById(memberId).orElseThrow();
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. id=" + memberId));
         member.updatePassword(newPassword);
     }
 
@@ -80,13 +81,37 @@ public class MemberService {
         return password.equals(member.getPassword());
     }
 
+    public List<MemberListDto> getAllDeletedMembers() {
+        List<Member> members = memberJpaRepository.findAllDeleted();
+        return members.stream().map(m -> new MemberListDto(
+                m.getId(),
+                m.getNickname(),
+                m.getEmail(),
+                m.getLastLoginDate(),
+                m.getDeletedAt()
+                )
+        ).toList();
+    }
+
     public List<MemberListDto> getAllMembers() {
         List<Member> members = memberJpaRepository.findAll();
         return members.stream().map(m -> new MemberListDto(
                 m.getId(),
                 m.getNickname(),
                 m.getEmail(),
-                m.getLastLoginDate())
+                m.getLastLoginDate(),
+                m.getDeletedAt())
+        ).toList();
+    }
+
+    public List<MemberListDto> getAllActiveMembers() {
+        List<Member> members = memberJpaRepository.findAllNotDeleted();
+        return members.stream().map(m -> new MemberListDto(
+                m.getId(),
+                m.getNickname(),
+                m.getEmail(),
+                m.getLastLoginDate(),
+                m.getDeletedAt())
         ).toList();
     }
 
@@ -101,7 +126,8 @@ public class MemberService {
     }
 
     public MemberFormDto getMemberById(Long id) {
-        Member member = memberJpaRepository.findById(id).orElseThrow();
+        Member member = memberJpaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. id=" + id));
         log.info("[service] member = " + member);
         return new MemberFormDto(
                 member.getId(),
@@ -110,5 +136,12 @@ public class MemberService {
                 member.getCreatedAt(),
                 member.getLastLoginDate()
         );
+    }
+
+    @Transactional
+    public void deleteMember(Long id) {
+        Member member = memberJpaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. id=" + id));
+        member.softDelete();
     }
 }

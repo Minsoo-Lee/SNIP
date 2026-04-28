@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="subjectiveCreate">
+
+  <h5>문제 추가</h5>
+
+  <div class="card p-3">
+    <form th:action="@{/admin/subjectives}" method="post">
+
+      <div class="mb-2">
+        <label>제목</label>
+        <input name="title" class="form-control" required/>
+      </div>
+
+      <div class="mb-2">
+        <label>내용</label>
+        <textarea name="content" class="form-control" rows="5"></textarea>
+      </div>
+
+      <div class="mb-2">
+        <label>난이도</label>
+        <select name="level" class="form-control">
+          <option value="EASY">EASY</option>
+          <option value="MEDIUM">MEDIUM</option>
+          <option value="HARD">HARD</option>
+        </select>
+      </div>
+
+      <button class="btn btn-success mt-2">저장</button>
+
+    </form>
+  </div>
+
+</div>
+</html>

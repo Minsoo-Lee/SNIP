@@ -1,7 +1,5 @@
 package stackup.snip.repository.jpa;
 
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +23,10 @@ public interface MemberJpaRepository extends JpaRepository<Member, Long> {
 
     @Query("select m.password from Member m where m.id = :memberId")
     String findPasswordById(Long memberId);
+
+    @Query("select m from Member m where m.deletedAt is not null")
+    List<Member> findAllDeleted();
+
+    @Query("select m from Member m where m.deletedAt is null")
+    List<Member> findAllNotDeleted();
 }

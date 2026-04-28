@@ -17,4 +17,20 @@ public class TimeBaseEntity {
     @CreatedDate
     @Column(updatable = false)
     protected LocalDateTime createdAt;
+
+    /**
+     * Member => 같은 이메일은 삭제해도 재사용 불가
+     *      왜? 이메일 = 그 사람의 정체성으로 간주
+     * Answer => 삭제하면 새 row 생성 대신 기존 row를 복구하고 진행
+     *      왜? 불필요한 row 생성 방지 및 동일 answer의 이력을 일관되게 관리
+     */
+    protected LocalDateTime deletedAt;
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public void restore() {
+        this.deletedAt = null;
+    }
 }

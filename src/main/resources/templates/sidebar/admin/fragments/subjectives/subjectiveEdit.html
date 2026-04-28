@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="subjectiveEdit">
+
+  <h5>문제 수정</h5>
+
+  <div class="card p-3">
+
+    <form th:action="@{/admin/subjectives/{id}(id=${subjective.id})}" method="post">
+
+      <div class="mb-2">
+        <label>제목</label>
+        <input name="title" class="form-control"
+               th:value="${subjective.title}" required/>
+      </div>
+
+      <div class="mb-2">
+        <label>내용</label>
+        <textarea name="content" class="form-control" rows="5"
+                  th:text="${subjective.content}"></textarea>
+      </div>
+
+      <div class="mb-2">
+        <label>난이도</label>
+        <select name="level" class="form-control">
+          <option th:selected="${subjective.level == 'EASY'}">EASY</option>
+          <option th:selected="${subjective.level == 'MEDIUM'}">MEDIUM</option>
+          <option th:selected="${subjective.level == 'HARD'}">HARD</option>
+        </select>
+      </div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <button class="btn btn-success">저장</button>
+
+        <form th:action="@{/admin/subjectives/{id}/delete(id=${subjective.id})}" method="post">
+          <button class="btn btn-danger">삭제</button>
+        </form>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+</html>

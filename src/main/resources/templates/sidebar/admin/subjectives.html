@@ -5,9 +5,28 @@
 
   <h2 class="mb-4">관리자 페이지</h2>
 
-  <div th:replace="~{admin/fragments/adminNav :: adminNav}"></div>
+  <div th:replace="~{sidebar/admin/fragments/adminNav :: adminNav}"></div>
 
-  <div th:replace="~{admin/fragments/subjectives/subjectivesForm :: subjectivesForm}"></div>
+  <div class="row">
+    <!-- 왼쪽: 리스트 -->
+    <div class="col-6 border-end">
+      <div th:replace="~{sidebar/admin/fragments/subjectives/subjectiveList :: subjectiveList}"></div>
+    </div>
+
+    <!-- 오른쪽 -->
+    <div class="col-6">
+
+      <!-- ⭐ 노션 sync 영역 항상 위에 -->
+      <div th:replace="~{sidebar/admin/fragments/subjectives/subjectiveSync :: subjectiveSync}"></div>
+
+      <!-- 생성 or 수정 -->
+      <div th:replace="${selectedId != null}
+        ? ~{sidebar/admin/fragments/subjectives/subjectiveEdit :: subjectiveEdit}
+        : ~{sidebar/admin/fragments/subjectives/subjectiveCreate :: subjectiveCreate}">
+      </div>
+
+    </div>
+  </div>
 
 </section>
 </html>

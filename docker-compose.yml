@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  snip-backend:
+    build: .
+    container_name: snip-backend
+    restart: always
+    working_dir: /app
+    command: ./gradlew bootRun --no-daemon
+    ports:
+      - "8081:9090"
+    depends_on:
+      - snip-mysql
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://snip-mysql:3306/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      FILE_UPLOAD_DIR: /app/storage
+    volumes:
+      - .:/app
+      - snip_gradle_cache:/root/.gradle
+      - snip_files:/app/storage
+
+  snip-mysql:
+    image: mysql:8.0
+    container_name: snip-mysql
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Seoul
+    ports:
+      - "3307:3306"
+    volumes:
+      - snip_mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  snip_mysql_data:
+  snip_gradle_cache:
+  snip_files:
