@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="categoryCreate">
+
+  <h5>문제 추가</h5>
+
+  <div class="card p-3">
+    <form th:action="@{/admin/categories}" method="post">
+
+      <div class="mb-2">
+        <label>카테고리 이름</label>
+        <input name="name" class="form-control" required/>
+      </div>
+
+      <button class="btn btn-success mt-2">저장</button>
+
+    </form>
+  </div>
+
+</div>
+</html>

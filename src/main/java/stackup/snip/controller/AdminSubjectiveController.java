@@ -19,12 +19,10 @@ public class AdminSubjectiveController {
 
     private final SubjectiveService subjectiveService;
 
-    @GetMapping("/subjectives")
+    @GetMapping
     public String subjectiveList(Model model) {
         List<AdminSubjectiveDto> subjectives = subjectiveService.getAllSubjectives();
         model.addAttribute("subjectives", subjectives);
         return "sidebar/admin/subjectives";
     }
-
-
 }

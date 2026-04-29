@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import stackup.snip.entity.Category;
 import stackup.snip.entity.Subjective;
 
 import java.util.List;
@@ -32,5 +33,5 @@ public interface SubjectiveJpaRepository extends JpaRepository<Subjective, Long>
     Optional<Subjective> findByQuestion(String question);
 
     @Query("select distinct s.category from Subjective s")
-    List<String> findAllCategories();
+    List<Category> findAllCategories();
 }

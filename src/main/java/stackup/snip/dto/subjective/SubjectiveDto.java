@@ -13,7 +13,7 @@ public class SubjectiveDto {
 
     public SubjectiveDto(Subjective subjective) {
         this.question = subjective.getQuestion();
-        this.category = subjective.getCategory();
+        this.category = subjective.getCategory().getName();
     }
 
     public SubjectiveDto(String question, String category) {

@@ -28,7 +28,7 @@ public interface AnswerJpaRepository extends JpaRepository<Answer, Long> {
     int countAnswersByMemberId(Long memberId);
 
     @Query("select new stackup.snip.dto.home.YesterdayDto(" +
-            "a.subjective.category, a.subjective.question, a.content" +
+            "a.subjective.category.name, a.subjective.question, a.content" +
             ") from Answer a where a.member.id = :memberId and a.createdAt >= :start and a.createdAt < :end"
     )
     Optional<YesterdayDto> getYesterdayDtoByMemberIdAndDate(
@@ -38,7 +38,7 @@ public interface AnswerJpaRepository extends JpaRepository<Answer, Long> {
     );
 
     @Query("select new stackup.snip.dto.subjective.HistoryDto(" +
-            "a.id, a.subjective.category, a.subjective.question, a.content, a.createdAt) " +
+            "a.id, a.subjective.category.name, a.subjective.question, a.content, a.createdAt) " +
             "from Answer a " +
             "where a.member.id = :memberId")
     List<HistoryDto> findAnswerByMemberId(@Param("memberId") Long memberId);

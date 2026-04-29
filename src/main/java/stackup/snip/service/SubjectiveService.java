@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.subjective.AdminSubjectiveDto;
 import stackup.snip.dto.subjective.SubjectiveDto;
+import stackup.snip.entity.Category;
 import stackup.snip.entity.Subjective;
 import stackup.snip.repository.jpa.AnswerJpaRepository;
+import stackup.snip.repository.jpa.CategoryJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 
 import java.util.ArrayList;
@@ -19,13 +21,23 @@ public class SubjectiveService {
 
     private final SubjectiveJpaRepository subjectiveJpaRepository;
     private final AnswerJpaRepository answerJpaRepository;
+    private final CategoryService categoryService;
     private final NotionService notionService;
 
     @Transactional
     public void importFromNotion() {
         List<SubjectiveDto> subjectiveDtos = notionService.getDatabasePages();
         for (SubjectiveDto subjectiveDto : subjectiveDtos) {
-            Subjective subjective = new Subjective(subjectiveDto.getQuestion(), subjectiveDto.getCategory());
+            String categoryName = subjectiveDto.getCategory();
+            boolean categoryExists = categoryService.ifExistsByName(categoryName);
+            Category category;
+            if (categoryExists) {
+                category = categoryService.getOne(categoryName);
+            } else {
+                category = new Category(categoryName);
+                categoryService.save(category);
+            }
+            Subjective subjective = new Subjective(subjectiveDto.getQuestion(), category);
             subjectiveJpaRepository.save(subjective);
         }
     }
@@ -54,7 +66,7 @@ public class SubjectiveService {
     }
 
     public List<String> getAllCategories() {
-        return subjectiveJpaRepository.findAllCategories();
+        return subjectiveJpaRepository.findAllCategories().stream().map(Category::getName).toList();
     }
 
     public List<AdminSubjectiveDto> getAllSubjectives() {

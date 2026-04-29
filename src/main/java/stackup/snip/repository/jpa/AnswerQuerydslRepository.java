@@ -49,7 +49,7 @@ public class AnswerQuerydslRepository {
     }
 
     private BooleanExpression categoryEq(String category) {
-        return hasText(category) ? answer.subjective.category.eq(category) : null;
+        return hasText(category) ? answer.subjective.category.name.eq(category) : null;
     }
 
     private BooleanExpression questionLike(String title) {

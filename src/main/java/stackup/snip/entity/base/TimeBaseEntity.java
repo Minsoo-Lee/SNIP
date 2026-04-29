@@ -26,11 +26,22 @@ public class TimeBaseEntity {
      */
     protected LocalDateTime deletedAt;
 
+    protected LocalDateTime updatedAt;
+
+    public void initUpdatedAt() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void softDelete() {
         this.deletedAt = LocalDateTime.now();
     }
 
     public void restore() {
         this.deletedAt = null;
+    }
+
+    //== 수정일자 업데이트 ==//
+    public void changeUpdatedAt() {
+        this.updatedAt = LocalDateTime.now();
     }
 }

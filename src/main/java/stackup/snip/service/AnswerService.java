@@ -85,7 +85,7 @@ public class AnswerService {
     public AnswerDto getAnswerDetail(Long answerId) {
         Answer findAnswer = answerJpaRepository.findAnswerById(answerId);
         return new AnswerDto(
-                findAnswer.getSubjective().getCategory(),
+                findAnswer.getSubjective().getCategory().getName(),
                 findAnswer.getSubjective().getQuestion(),
                 findAnswer.getContent(),
                 findAnswer.getCreatedAt()
@@ -101,7 +101,7 @@ public class AnswerService {
         for (Answer findAnswer : findAnswers) {
             result.add(new HistoryDto(
                     findAnswer.getId(),
-                    findAnswer.getSubjective().getCategory(),
+                    findAnswer.getSubjective().getCategory().getName(),
                     findAnswer.getSubjective().getQuestion(),
                     findAnswer.getContent(),
                     findAnswer.getCreatedAt()

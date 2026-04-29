@@ -18,7 +18,7 @@ public class AdminSubjectiveDto {
     public AdminSubjectiveDto(Subjective subjective) {
         this.id = subjective.getId();
         this.question = subjective.getQuestion();
-        this.category = subjective.getCategory();
+        this.category = subjective.getCategory().getName();
         this.updatedAt = subjective.getUpdatedAt();
     }
 }

@@ -51,7 +51,8 @@ public class AdminMemberController {
         if (result.hasErrors()) {
             log.info("에러 발생!!!!!");
             log.info("에러 목록: {}", result.getAllErrors()); // ✅ 추가
-            model.addAttribute("members", memberService.getAllDeletedMembers());
+//            model.addAttribute("members", memberService.getAllDeletedMembers());
+            model.addAttribute("members", memberService.getAllActiveMembers());
             model.addAttribute("memberForm", memberForm);
             model.addAttribute("currentTab", "members");
             return "sidebar/admin/members";

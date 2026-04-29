@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import stackup.snip.entity.base.TimeBaseEntity;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 public class Subjective extends TimeBaseEntity {
@@ -15,21 +13,17 @@ public class Subjective extends TimeBaseEntity {
     private Long id;
 
     private String question;
-    private String category;
 
-    private LocalDateTime updatedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Subjective() {
     }
 
-    public Subjective(String question, String category) {
+    public Subjective(String question, Category category) {
         this.question = question;
         this.category = category;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    //== 수정일자 업데이트 ==//
-    public void changeUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+        initUpdatedAt();
     }
 }
