@@ -11,6 +11,9 @@ public class SaveCategoryDto {
 
     private String name;
 
+    public SaveCategoryDto() {
+    }
+
     public SaveCategoryDto(String name) {
         this.name = name;
     }

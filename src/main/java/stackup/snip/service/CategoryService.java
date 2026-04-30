@@ -30,6 +30,10 @@ public class CategoryService {
         categoryJpaRepository.save(category);
     }
 
+    public void save(String categoryName) {
+        categoryJpaRepository.save(new Category(categoryName));
+    }
+
     public List<CategoryListDto> getAllCategories() {
         return categoryJpaRepository.findAll()
                 .stream()
