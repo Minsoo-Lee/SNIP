@@ -3,22 +3,36 @@
 
 <div th:fragment="categoryEdit">
 
-  <h5>문제 수정</h5>
+  <!-- 성공 메시지 -->
+  <div th:if="${successMessage != null}"
+       class="alert alert-success d-flex align-items-center justify-content-between shadow-sm border-0 rounded-3 px-4 py-3 mb-4"
+       role="alert"
+       style="font-size: 1.05rem;">
+
+    <div class="d-flex align-items-center">
+      <span class="me-3 fs-3">✅</span>
+      <div>
+        <div class="fw-bold">저장 완료</div>
+        <div th:text="${successMessage}" class="small"></div>
+      </div>
+    </div>
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <h5>카테고리 수정</h5>
 
   <div class="card p-3">
 
-    <form th:action="@{/admin/categories/{id}(id=${category.id})}" method="post">
+    <form th:action="@{/admin/categories/{id}(id=${category.id})}" th:object="${category}" method="post">
 
       <div class="mb-2">
-        <label>제목</label>
-        <input name="title" class="form-control"
-               th:value="${category.title}" required/>
-      </div>
-
-      <div class="mb-2">
-        <label>내용</label>
-        <textarea name="content" class="form-control" rows="5"
-                  th:text="${category.content}"></textarea>
+        <label>카테고리명</label>
+        <input th:field="*{name}" class="form-control"
+               th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"/>
+        <div class="invalid-feedback"
+             th:if="${#fields.hasErrors('name')}"
+             th:errors="*{name}"></div>
       </div>
 
       <div class="d-flex justify-content-between mt-3">

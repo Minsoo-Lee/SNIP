@@ -8,7 +8,6 @@ import stackup.snip.dto.subjective.SubjectiveDto;
 import stackup.snip.entity.Category;
 import stackup.snip.entity.Subjective;
 import stackup.snip.repository.jpa.AnswerJpaRepository;
-import stackup.snip.repository.jpa.CategoryJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class SubjectiveService {
             boolean categoryExists = categoryService.ifExistsByName(categoryName);
             Category category;
             if (categoryExists) {
-                category = categoryService.getOne(categoryName);
+                category = categoryService.getOneByName(categoryName);
             } else {
                 category = new Category(categoryName);
                 categoryService.save(category);
@@ -66,7 +65,7 @@ public class SubjectiveService {
     }
 
     public List<String> getAllCategories() {
-        return subjectiveJpaRepository.findAllCategories().stream().map(Category::getName).toList();
+        return categoryService.getAllCategoryNames();
     }
 
     public List<AdminSubjectiveDto> getAllSubjectives() {

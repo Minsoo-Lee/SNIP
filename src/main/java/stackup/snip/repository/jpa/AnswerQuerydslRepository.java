@@ -1,22 +1,17 @@
 package stackup.snip.repository.jpa;
 
-import ch.qos.logback.core.util.StringUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
-import stackup.snip.dto.subjective.HistoryDto;
 import stackup.snip.entity.Answer;
-import stackup.snip.entity.QAnswer;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.*;
 import static stackup.snip.entity.QAnswer.*;
-import static stackup.snip.entity.QMember.*;
 
 @Repository
 @RequiredArgsConstructor
