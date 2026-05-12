@@ -10,8 +10,6 @@ import stackup.snip.dto.category.CategoryDetailDto;
 import stackup.snip.dto.category.CategoryEditDto;
 import stackup.snip.dto.category.CategoryListDto;
 import stackup.snip.dto.category.SaveCategoryDto;
-import stackup.snip.dto.subjective.AdminSubjectiveDto;
-import stackup.snip.entity.Category;
 import stackup.snip.service.CategoryService;
 
 import java.util.List;

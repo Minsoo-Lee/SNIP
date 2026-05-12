@@ -3,6 +3,7 @@ package stackup.snip.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.category.CategoryDetailDto;
 import stackup.snip.dto.category.CategoryListDto;
 import stackup.snip.entity.Category;
@@ -13,6 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class CategoryService {
 
     private final CategoryJpaRepository categoryJpaRepository;
@@ -30,11 +32,13 @@ public class CategoryService {
         return categoryJpaRepository.existsByName(name);
     }
 
+    @Transactional
     public void save(Category category) {
         category.changeUpdatedAt();
         categoryJpaRepository.save(category);
     }
 
+    @Transactional
     public void save(String categoryName) {
         categoryJpaRepository.save(new Category(categoryName));
     }
@@ -53,6 +57,7 @@ public class CategoryService {
                 .toList();
     }
 
+    @Transactional
     public void changeName(Long id, String name) {
         Category category = categoryJpaRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 카테고리입니다.")
