@@ -5,7 +5,7 @@
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">유저 목록</h5>
-    <a class="btn btn-sm btn-primary" th:href="@{/admin/members(filter=${filter})}">+ 추가</a>
+<!--    <a class="btn btn-sm btn-primary" th:href="@{/admin/members(filter=${filter})}">+ 추가</a>-->
   </div>
 
   <!-- 필터 버튼 -->
@@ -34,6 +34,7 @@
       <th>이메일</th>
       <th th:if="${filter == 'active' or filter == 'all'}">상태</th>
       <th th:if="${filter == 'deleted' or filter == 'all'}">삭제일</th>
+      <th th:if="${filter == 'active' or filter == 'all'}">수정일</th>
     </tr>
     </thead>
     <tbody>
@@ -77,6 +78,10 @@
 
       <td th:if="${filter == 'deleted' or filter == 'all'}">
         <span th:text="${member.deletedAt != null ? #temporals.format(member.deletedAt, 'yyyy-MM-dd HH:mm') : '-'}"></span>
+      </td>
+
+      <td th:if="${filter == 'active' or filter == 'all'}">
+        <span th:text="${member.deletedAt == null ? #temporals.format(member.updatedAt, 'yyyy-MM-dd HH:mm') : '-'}"></span>
       </td>
     </tr>
     </tbody>

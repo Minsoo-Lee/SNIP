@@ -46,8 +46,16 @@ public class CategoryService {
     public List<CategoryListDto> getAllCategories() {
         return categoryJpaRepository.findAll()
                 .stream()
-                .map(category -> new CategoryListDto(category.getId(), category.getName(), category.getUpdatedAt()))
+                .map(category -> new CategoryListDto(category.getId(), category.getName(), category.getUpdatedAt(), category.getDeletedAt()))
                 .toList();
+    }
+
+    public List<CategoryListDto> getDeletedCategories() {
+        return categoryJpaRepository.findDeletedCategories();
+    }
+
+    public List<CategoryListDto> getAllActiveCategories() {
+        return categoryJpaRepository.findActiveCategories();
     }
 
     public List<String> getAllCategoryNames() {
@@ -63,5 +71,11 @@ public class CategoryService {
                 () -> new IllegalArgumentException("존재하지 않는 카테고리입니다.")
         );
         category.setName(name);
+    }
+
+    @Transactional
+    public void softDeleteCategory(Long id) {
+        Category category = categoryJpaRepository.getReferenceById(id);
+        category.softDelete();
     }
 }

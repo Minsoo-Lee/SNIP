@@ -74,6 +74,7 @@ public class MemberService {
         Member member = memberJpaRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. id=" + memberId));
         member.updatePassword(newPassword);
+        member.changeUpdatedAt();
     }
 
     public boolean checkAdminPassword(Long memberId, String password) {
@@ -88,6 +89,7 @@ public class MemberService {
                 m.getNickname(),
                 m.getEmail(),
                 m.getLastLoginDate(),
+                m.getUpdatedAt(),
                 m.getDeletedAt()
                 )
         ).toList();
@@ -100,6 +102,7 @@ public class MemberService {
                 m.getNickname(),
                 m.getEmail(),
                 m.getLastLoginDate(),
+                m.getUpdatedAt(),
                 m.getDeletedAt())
         ).toList();
     }
@@ -111,6 +114,7 @@ public class MemberService {
                 m.getNickname(),
                 m.getEmail(),
                 m.getLastLoginDate(),
+                m.getUpdatedAt(),
                 m.getDeletedAt())
         ).toList();
     }

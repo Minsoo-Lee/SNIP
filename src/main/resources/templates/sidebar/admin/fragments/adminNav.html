@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/admin.css}">
 
 <div th:fragment="adminNav">
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
       <a class="nav-link"
-         th:classappend="${currentTab == 'members'} ? 'active'"
+         th:classappend="${currentTab == 'members'} ? ' active'"
          th:href="@{/admin/members}">
         유저 관리
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link"
-         th:classappend="${currentTab == 'subjectives'} ? 'active'"
+         th:classappend="${currentTab == 'subjectives'} ? ' active'"
          th:href="@{/admin/subjectives}">
         문제 관리
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link"
-         th:classappend="${currentTab == 'categories'} ? 'active'"
+         th:classappend="${currentTab == 'categories'} ? ' active'"
          th:href="@{/admin/categories}">
         카테고리 관리
       </a>
