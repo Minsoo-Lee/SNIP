@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.subjective.AdminSubjectiveDto;
+import stackup.snip.dto.subjective.CategorySubjectiveDto;
 import stackup.snip.dto.subjective.SubjectiveDto;
 import stackup.snip.entity.Category;
 import stackup.snip.entity.Subjective;
@@ -77,5 +78,11 @@ public class SubjectiveService {
             );
         }
         return subjectiveDtos;
+    }
+
+    public List<CategorySubjectiveDto> getCategorySubjectDto(Long id) {
+        List<Subjective> subjectives = subjectiveJpaRepository.getReferenceByCategory_Id(id);
+        return subjectives.stream().map(s -> new CategorySubjectiveDto(s.getQuestion()))
+                .toList();
     }
 }

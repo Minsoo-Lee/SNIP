@@ -16,11 +16,20 @@
     <!-- 오른쪽 -->
     <div class="col-6">
 
-      <!-- 생성 or 수정 -->
-      <div th:replace="${selectedId != null}
-        ? ~{sidebar/admin/fragments/categories/categoryEdit :: categoryEdit}
-        : ~{sidebar/admin/fragments/categories/categoryCreate :: categoryCreate}">
-      </div>
+      <!-- 생성 -->
+      <th:block th:if="${mode == 'create'}">
+        <div th:replace="~{sidebar/admin/fragments/categories/categoryCreate :: categoryCreate}"></div>
+      </th:block>
+
+      <!-- 수정 -->
+      <th:block th:if="${mode == 'edit'}">
+        <div th:replace="~{sidebar/admin/fragments/categories/categoryEdit :: categoryEdit}"></div>
+      </th:block>
+
+      <!-- 삭제 -->
+      <th:block th:if="${mode == 'delete'}">
+        <div th:replace="~{sidebar/admin/fragments/categories/categoryDelete :: categoryDelete}"></div>
+      </th:block>
 
     </div>
   </div>

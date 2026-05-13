@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="categoryDelete">
+
+  <div class="card border-danger shadow-sm">
+
+    <div class="card-body">
+
+      <h4 class="text-danger mb-3">
+        카테고리 삭제
+      </h4>
+
+      <p class="mb-3">
+        아래 카테고리를 삭제하시겠습니까?
+      </p>
+
+      <div class="alert alert-secondary">
+        <strong th:text="${category.name}"></strong>
+      </div>
+
+      <div th:if="${!#lists.isEmpty(subjectives)}"
+           class="alert alert-danger d-flex flex-column">
+
+        <div class="fw-bold mb-2">
+          다음 문제들도 같이 삭제됩니다.
+        </div>
+
+        <ul class="ps-3 mb-3">
+          <li th:each="subjective : ${subjectives}"
+              th:text="${subjective.name}">
+          </li>
+        </ul>
+
+        <hr class="w-25 my-1">
+
+        <div class="fw-bold">
+          총 <strong th:text="${count}"></strong>개
+        </div>
+
+      </div>
+
+      <form th:action="@{/admin/categories/{id}/delete(id=${category.id})}"
+            method="post">
+
+        <button class="btn btn-danger">
+          삭제하기
+        </button>
+
+        <a th:href="@{/admin/categories/{id}/edit(id=${category.id})}"
+           class="btn btn-secondary">
+          취소
+        </a>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

@@ -10,7 +10,9 @@ import stackup.snip.dto.category.CategoryDetailDto;
 import stackup.snip.dto.category.CategoryEditDto;
 import stackup.snip.dto.category.CategoryListDto;
 import stackup.snip.dto.category.SaveCategoryDto;
+import stackup.snip.dto.subjective.CategorySubjectiveDto;
 import stackup.snip.service.CategoryService;
+import stackup.snip.service.SubjectiveService;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 public class AdminCategoryController {
 
     private final CategoryService categoryService;
+    private final SubjectiveService subjectiveService;
 
     @GetMapping
     public String categoryList(
@@ -34,6 +37,7 @@ public class AdminCategoryController {
         model.addAttribute("categories", categories);
         model.addAttribute("categoryForm", new SaveCategoryDto());
         model.addAttribute("filter", filter);
+        model.addAttribute("mode", "create");
         return "sidebar/admin/categories";
     }
 
@@ -65,7 +69,7 @@ public class AdminCategoryController {
     ) {
         CategoryDetailDto categoryDetailDto = categoryService.getCategoryDetailDtoById(id);
         model.addAttribute("category", categoryDetailDto);
-        model.addAttribute("selectedId", id);
+        model.addAttribute("mode", "edit");
         model.addAttribute("categories", categoryService.getAllActiveCategories());
         model.addAttribute("filter", "active");
         return "sidebar/admin/categories";
@@ -86,7 +90,7 @@ public class AdminCategoryController {
             dto.setId(id);
             model.addAttribute("category", dto);
             model.addAttribute("categories", categoryService.getAllCategories());
-            model.addAttribute("selectedId", id);
+            model.addAttribute("mode", "edit");
             model.addAttribute("currentTab", "categories");
             return "sidebar/admin/categories";
         }
@@ -99,13 +103,31 @@ public class AdminCategoryController {
      * 카테고리 지우면 문제까지 지워버리자...
      * 그 전에 어떤 문제가 지워질지 안내창 띄우는게 더 나을지도?
      */
+    @GetMapping("/{id}/delete")
+    public String showCategoryDelete(
+            @PathVariable Long id,
+            Model model
+    ) {
+        CategoryDetailDto categoryDetailDto = categoryService.getCategoryDetailDtoById(id);
+        List<CategorySubjectiveDto> subjectives = subjectiveService.getCategorySubjectDto(id);
+
+        model.addAttribute("category", categoryDetailDto);
+        model.addAttribute("mode", "delete");
+        model.addAttribute("categories", categoryService.getAllActiveCategories());
+        model.addAttribute("subjectives", subjectives);
+        model.addAttribute("count", subjectives.size());
+        model.addAttribute("filter", "active");
+        return "sidebar/admin/categories";
+    }
+
     @PostMapping("/{id}/delete")
     public String categoryDelete(
             @PathVariable Long id,
+            Model model,
             RedirectAttributes redirectAttributes
     ) {
         categoryService.softDeleteCategory(id);
-        redirectAttributes.addFlashAttribute("successMessage", "수정이 완료되었습니다.");
-        return "redirect:/admin/categories/{id}";
+        redirectAttributes.addFlashAttribute("successMessage", "삭제가 완료되었습니다.");
+        return "redirect:/admin/categories";
     }
 }
