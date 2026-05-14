@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="userCreate">
+<div th:fragment="memberCreate">
 
   <!-- 성공 메시지 -->
   <div th:if="${successMessage != null}"
@@ -20,7 +20,7 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 
-  <h5>유저 추가</h5>
+  <h5>유저 추가</h\5>
 
   <div class="card p-3">
     <form th:action="@{/admin/members}" th:object="${memberForm}" method="post">

@@ -34,6 +34,7 @@ public class AdminMemberController {
         model.addAttribute("members", members);
         model.addAttribute("memberForm", new MemberFormDto());
         model.addAttribute("filter", filter);
+        model.addAttribute("mode", "create");
 
         return "sidebar/admin/members";
     }
@@ -73,7 +74,7 @@ public class AdminMemberController {
         model.addAttribute("members", members);
         model.addAttribute("memberForm", memberDetailDto);
         model.addAttribute("filter", "active");
-        model.addAttribute("selectedId", id);
+        model.addAttribute("mode", "edit");
         return "sidebar/admin/members";
     }
 
@@ -93,7 +94,7 @@ public class AdminMemberController {
             memberForm.setId(id);
             model.addAttribute("memberForm", memberForm);
             model.addAttribute("members", memberService.getAllDeletedMembers());
-            model.addAttribute("selectedId", id);
+            model.addAttribute("mode", "edit");
             model.addAttribute("currentTab", "members");
             return "sidebar/admin/members";
         }
@@ -105,9 +106,26 @@ public class AdminMemberController {
         return "redirect:/admin/members/{id}";
     }
 
+    @GetMapping("/{id}/delete")
+    public String showMemberDelete(
+            @PathVariable Long id,
+            Model model
+    ) {
+        MemberFormDto memberForm = memberService.getMemberById(id);
+        model.addAttribute("memberForm", memberForm);
+        model.addAttribute("members", memberService.getAllActiveMembers());
+        model.addAttribute("filter", "active");
+        model.addAttribute("mode", "delete");
+        return "sidebar/admin/members";
+    }
+
     @PostMapping("/{id}/delete")
-    public String deleteUser(@PathVariable Long id) {
+    public String deleteUser(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes
+            ) {
         memberService.deleteMember(id);
+        redirectAttributes.addFlashAttribute("successMessage", "삭제가 완료되었습니다.");
         return "redirect:/admin/members";
     }
 }

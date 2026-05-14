@@ -9,13 +9,24 @@
 
   <div class="row">
     <div class="col-6 border-end">
-      <div th:replace="~{sidebar/admin/fragments/members/userList :: userList}"></div>
+      <div th:replace="~{sidebar/admin/fragments/members/memberList :: memberList}"></div>
     </div>
     <div class="col-6">
-      <div th:replace="${selectedId != null}
-        ? ~{sidebar/admin/fragments/members/userEdit :: userEdit}
-        : ~{sidebar/admin/fragments/members/userCreate :: userCreate}">
-      </div>
+
+      <!-- 생성 -->
+      <th:block th:if="${mode == 'create'}">
+        <div th:replace="~{sidebar/admin/fragments/members/memberCreate :: memberCreate}"></div>
+      </th:block>
+
+      <!-- 수정 -->
+      <th:block th:if="${mode == 'edit'}">
+        <div th:replace="~{sidebar/admin/fragments/members/memberEdit :: memberEdit}"></div>
+      </th:block>
+
+      <!-- 삭제 -->
+      <th:block th:if="${mode == 'delete'}">
+        <div th:replace="~{sidebar/admin/fragments/members/memberDelete :: memberDelete}"></div>
+      </th:block>
     </div>
   </div>
 

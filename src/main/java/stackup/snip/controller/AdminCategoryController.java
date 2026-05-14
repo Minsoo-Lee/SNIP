@@ -123,7 +123,6 @@ public class AdminCategoryController {
     @PostMapping("/{id}/delete")
     public String categoryDelete(
             @PathVariable Long id,
-            Model model,
             RedirectAttributes redirectAttributes
     ) {
         categoryService.softDeleteCategory(id);

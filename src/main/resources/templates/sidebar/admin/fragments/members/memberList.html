@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="userList">
+<div th:fragment="memberList">
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">유저 목록</h5>
@@ -81,7 +81,7 @@
       </td>
 
       <td th:if="${filter == 'active' or filter == 'all'}">
-        <span th:text="${member.deletedAt == null ? #temporals.format(member.updatedAt, 'yyyy-MM-dd HH:mm') : '-'}"></span>
+        <span th:text="${member.updatedAt != null ? #temporals.format(member.updatedAt, 'yyyy-MM-dd HH:mm') : '-'}"></span>
       </td>
     </tr>
     </tbody>

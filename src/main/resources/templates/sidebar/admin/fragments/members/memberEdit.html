@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="userEdit">
+<div th:fragment="memberEdit">
 
   <!-- 성공 메시지 -->
   <div th:if="${successMessage != null}"
@@ -123,75 +123,69 @@
   <div class="card border-danger shadow-sm">
 
     <div class="card-body">
-
-      <h6 class="text-danger mb-2">
+      <h5 class="text-danger mb-2">
         위험 작업
-      </h6>
-
+      </h5>
       <p class="text-muted small mb-3">
         삭제된 유저는 복구할 수 없습니다.
       </p>
-
-      <button type="button"
-              class="btn btn-danger"
-              data-bs-toggle="modal"
-              data-bs-target="#deleteModal">
-
+      <a th:href="@{/admin/members/{id}/delete(id=${memberForm.id})}"
+         class="btn btn-danger">
         유저 삭제
-      </button>
+      </a>
 
     </div>
   </div>
 
   <!-- 삭제 모달 -->
-  <div class="modal fade" id="deleteModal" tabindex="-1">
+<!--  <div class="modal fade" id="deleteModal" tabindex="-1">-->
 
-    <div class="modal-dialog">
+<!--    <div class="modal-dialog">-->
 
-      <div class="modal-content">
+<!--      <div class="modal-content">-->
 
-        <div class="modal-header">
+<!--        <div class="modal-header">-->
 
-          <h5 class="modal-title">
-            삭제 확인
-          </h5>
+<!--          <h5 class="modal-title">-->
+<!--            삭제 확인-->
+<!--          </h5>-->
 
-          <button type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal">
-          </button>
+<!--          <button type="button"-->
+<!--                  class="btn-close"-->
+<!--                  data-bs-dismiss="modal">-->
+<!--          </button>-->
 
-        </div>
+<!--        </div>-->
 
-        <div class="modal-body">
-          <strong th:text="${memberForm.nickname}"></strong>
-          유저를 정말 삭제하시겠습니까?
-        </div>
+<!--        <div class="modal-body">-->
+<!--          <strong th:text="${memberForm.nickname}"></strong>-->
+<!--          유저를 정말 삭제하시겠습니까?-->
+<!--        </div>-->
 
-        <div class="modal-footer">
+<!--        <div class="modal-footer">-->
 
-          <button type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal">
+<!--          <button type="button"-->
+<!--                  class="btn btn-secondary"-->
+<!--                  data-bs-dismiss="modal">-->
 
-            취소
-          </button>
+<!--            취소-->
+<!--          </button>-->
 
-          <form th:action="@{/admin/members/{id}/delete(id=${memberForm.id})}"
-                method="post">
+<!--          <form th:action="@{/admin/members/{id}/delete(id=${memberForm.id})}"-->
+<!--                method="post">-->
 
-            <button type="submit"
-                    class="btn btn-danger">
+<!--            <button type="submit"-->
+<!--                    class="btn btn-danger">-->
 
-              삭제
-            </button>
+<!--              삭제-->
+<!--            </button>-->
 
-          </form>
+<!--          </form>-->
 
-        </div>
-      </div>
-    </div>
-  </div>
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
 </div>
 
