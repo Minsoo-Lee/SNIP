@@ -3,28 +3,40 @@
 
 <div th:fragment="subjectiveCreate">
 
+  <!-- 성공 메시지 -->
+  <div th:if="${successMessage != null}"
+       class="alert alert-success d-flex align-items-center justify-content-between shadow-sm border-0 rounded-3 px-4 py-3 mb-4"
+       role="alert"
+       style="font-size: 1.05rem;">
+
+    <div class="d-flex align-items-center">
+      <span class="me-3 fs-3">✅</span>
+      <div>
+        <div class="fw-bold">저장 완료</div>
+        <div th:text="${successMessage}" class="small"></div>
+      </div>
+    </div>
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
   <h5>문제 추가</h5>
 
   <div class="card p-3">
-    <form th:action="@{/admin/subjectives}" method="post">
+    <form th:action="@{/admin/subjectives}" th:object="${subjectiveForm}" method="post">
 
       <div class="mb-2">
-        <label>제목</label>
-        <input name="title" class="form-control" required/>
+        <label>카테고리</label>
+        <input name="category" class="form-control" required/>
       </div>
 
       <div class="mb-2">
         <label>내용</label>
-        <textarea name="content" class="form-control" rows="5"></textarea>
-      </div>
-
-      <div class="mb-2">
-        <label>난이도</label>
-        <select name="level" class="form-control">
-          <option value="EASY">EASY</option>
-          <option value="MEDIUM">MEDIUM</option>
-          <option value="HARD">HARD</option>
-        </select>
+        <input th:field="*{content}" class="form-control" required
+               th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'"/>
+        <div class="invalid-feedback"
+             th:if="${#fields.hasErrors('content')}"
+             th:errors="*{content}"></div>
       </div>
 
       <button class="btn btn-success mt-2">저장</button>

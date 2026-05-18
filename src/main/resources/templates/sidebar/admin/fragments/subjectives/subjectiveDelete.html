@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="subjectiveDelete">
+
+  <div class="card border-danger shadow-sm">
+
+    <div class="card-body">
+
+      <h4 class="text-danger mb-3">
+        문제 삭제
+      </h4>
+
+      <p class="mb-3">
+        아래 문제를 삭제하시겠습니까?
+      </p>
+
+      <div class="alert alert-secondary">
+        <strong th:text="${subjective.content}"></strong>
+      </div>
+
+      <form th:action="@{/admin/subjectives/{id}/delete(id=${subjective.id})}"
+            method="post">
+
+        <button class="btn btn-danger">
+          삭제하기
+        </button>
+
+        <a th:href="@{/admin/subjectives/{id}/edit(id=${subjective.id})}"
+           class="btn btn-secondary">
+          취소
+        </a>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

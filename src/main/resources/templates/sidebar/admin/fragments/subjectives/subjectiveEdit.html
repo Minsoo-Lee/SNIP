@@ -3,43 +3,71 @@
 
 <div th:fragment="subjectiveEdit">
 
-  <h5>문제 수정</h5>
+  <!-- 성공 메시지 -->
+  <div th:if="${successMessage != null}"
+       class="alert alert-success d-flex align-items-center justify-content-between shadow-sm border-0 rounded-3 px-4 py-3 mb-4"
+       role="alert">
 
-  <div class="card p-3">
+    <div class="d-flex align-items-center">
+      <span class="me-3 fs-3">✅</span>
 
-    <form th:action="@{/admin/subjectives/{id}(id=${subjective.id})}" method="post">
+      <div>
+        <div class="fw-bold">저장 완료</div>
+        <div th:text="${successMessage}" class="small"></div>
+      </div>
+    </div>
 
-      <div class="mb-2">
-        <label>제목</label>
-        <input name="title" class="form-control"
-               th:value="${subjective.title}" required/>
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"></button>
+  </div>
+
+  <div class="card p-4 mb-4 shadow-sm border-0">
+
+    <h5 class="mb-3">문제 수정</h5>
+
+    <form th:action="@{/admin/subjectives/{id}(id=${subjective.id})}"
+          th:object="${subjective}"
+          method="post">
+
+      <div class="mb-3">
+        <label class="form-label">카테고리명</label>
+
+        <input th:fiels="*{category}" class="form-control">
+
+        <input th:field="*{name}"
+               class="form-control"
+               th:classappend="${#fields.hasErrors('name')} ? ' is-invalid'"/>
+
+        <div class="invalid-feedback"
+             th:if="${#fields.hasErrors('name')}"
+             th:errors="*{name}">
+        </div>
       </div>
 
-      <div class="mb-2">
-        <label>내용</label>
-        <textarea name="content" class="form-control" rows="5"
-                  th:text="${subjective.content}"></textarea>
-      </div>
-
-      <div class="mb-2">
-        <label>난이도</label>
-        <select name="level" class="form-control">
-          <option th:selected="${subjective.level == 'EASY'}">EASY</option>
-          <option th:selected="${subjective.level == 'MEDIUM'}">MEDIUM</option>
-          <option th:selected="${subjective.level == 'HARD'}">HARD</option>
-        </select>
-      </div>
-
-      <div class="d-flex justify-content-between mt-3">
-        <button class="btn btn-success">저장</button>
-
-        <form th:action="@{/admin/subjectives/{id}/delete(id=${subjective.id})}" method="post">
-          <button class="btn btn-danger">삭제</button>
-        </form>
-      </div>
+      <button class="btn btn-success">
+        저장
+      </button>
 
     </form>
+  </div>
 
+  <!-- 위험 작업 -->
+  <div class="card border-danger shadow-sm">
+
+    <div class="card-body">
+      <h5 class="text-danger mb-2">
+        위험 작업
+      </h5>
+      <p class="text-muted small mb-3">
+        삭제된 카테고리는 복구할 수 없습니다.
+      </p>
+      <a th:href="@{/admin/subjectives/{id}/delete(id=${subjective.id})}"
+         class="btn btn-danger">
+        카테고리 삭제
+      </a>
+
+    </div>
   </div>
 
 </div>

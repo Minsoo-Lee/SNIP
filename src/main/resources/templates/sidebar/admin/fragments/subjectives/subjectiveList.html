@@ -5,8 +5,24 @@
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">문제 목록</h5>
-    <a class="btn btn-sm btn-primary" th:href="@{/admin/subjectives}">
-      + 추가
+  </div>
+
+  <!-- 필터 버튼 -->
+  <div class="btn-group mb-3" role="group">
+    <a class="btn btn-sm"
+       th:classappend="${filter == 'active'} ? ' btn-dark' : ' btn-outline-dark'"
+       th:href="@{/admin/subjectives(filter='active')}">
+      사용 중
+    </a>
+    <a class="btn btn-sm"
+       th:classappend="${filter == 'deleted'} ? ' btn-dark' : ' btn-outline-dark'"
+       th:href="@{/admin/subjectives(filter='deleted')}">
+      삭제됨
+    </a>
+    <a class="btn btn-sm"
+       th:classappend="${filter == 'all'} ? ' btn-dark' : ' btn-outline-dark'"
+       th:href="@{/admin/subjectives(filter='all')}">
+      전체 보기
     </a>
   </div>
 
@@ -16,19 +32,48 @@
       <th>ID</th>
       <th>카테고리</th>
       <th>제목</th>
-      <th>수정일</th>
+      <th th:if="${filter == 'active' or filter == 'all'}">상태</th>
+      <th th:if="${filter == 'deleted' or filter == 'all'}">삭제일</th>
+      <th th:if="${filter == 'active' or filter == 'all'}">수정일</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="s : ${subjectives}"
         style="cursor:pointer;"
         th:classappend="${selectedId == s.id} ? 'table-primary'"
-        th:onclick="|location.href='@{/admin/subjectives/{id}(id=${s.id})}'|">
+        th:onclick="|location.href='@{/admin/subjectives/{id}(id=${s.id}, filter=${filter})}'|">
 
       <td th:text="${s.id}"></td>
       <td th:text="${s.category}"></td>
       <td th:text="${s.question}"></td>
-      <td th:text="${#temporals.format(s.updatedAt, 'yyyy-MM-dd')}"></td>
+      <!-- 상태 -->
+      <td th:if="${filter == 'active' or filter == 'all'}">
+
+        <span class="badge bg-success"
+              th:if="${s.deletedAt == null}">
+          사용 중
+        </span>
+
+        <span class="badge bg-dark"
+              th:if="${s.deletedAt != null}">
+          삭제됨
+        </span>
+
+      </td>
+
+      <!-- 수정일 -->
+      <td th:if="${filter == 'active' or filter == 'all'}">
+        <span th:text="${s.deletedAt == null
+            ? #temporals.format(s.updatedAt, 'yyyy-MM-dd HH:mm')
+            : '-'}"></span>
+      </td>
+
+      <!-- 삭제일 -->
+      <td th:if="${filter == 'deleted' or filter == 'all'}">
+        <span th:text="${s.deletedAt != null
+            ? #temporals.format(s.deletedAt, 'yyyy-MM-dd HH:mm')
+            : '-'}"></span>
+      </td>
     </tr>
     </tbody>
   </table>
