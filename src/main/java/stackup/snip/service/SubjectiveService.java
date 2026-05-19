@@ -98,8 +98,9 @@ public class SubjectiveService {
         return subjectiveJpaRepository.existsByQuestion(content);
     }
 
+    @Transactional
     public Subjective save(String categoryName, String content) {
-        Category category = categoryService.save(categoryName);
+        Category category = categoryService.getOneByName(categoryName);
         return subjectiveJpaRepository.save(new Subjective(
                 content, category
         ));
