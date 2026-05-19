@@ -4,7 +4,7 @@ services:
     container_name: snip-backend
     restart: always
     working_dir: /app
-    command: ./gradlew bootRun --no-daemon
+#    command: ./gradlew bootRun --no-daemon
     ports:
       - "8081:9090"
     depends_on:

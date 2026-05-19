@@ -13,4 +13,5 @@ RUN gradle dependencies --no-daemon
 COPY . .
 
 # 5. 실행
-CMD ["./gradlew", "bootRun", "--no-daemon"]
+#CMD ["./gradlew", "bootRun", "--no-daemon"]
+CMD ["gradle", "bootRun", "--no-daemon"]

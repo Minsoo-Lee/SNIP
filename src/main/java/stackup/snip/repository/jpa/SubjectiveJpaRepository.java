@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import stackup.snip.dto.subjective.AdminSubjectiveDto;
 import stackup.snip.entity.Category;
 import stackup.snip.entity.Subjective;
 
@@ -33,4 +34,16 @@ public interface SubjectiveJpaRepository extends JpaRepository<Subjective, Long>
     Optional<Subjective> findByQuestion(String question);
 
     List<Subjective> getReferenceByCategory_Id(Long categoryId);
+
+    @Query("select new stackup.snip.dto.subjective.AdminSubjectiveDto(" +
+            "s.id, s.question, s.category.name, s.updatedAt, s.deletedAt) " +
+            "from Subjective s " +
+            "where s.deletedAt is null")
+    List<AdminSubjectiveDto> findActiveSubjectives();
+
+    @Query("select new stackup.snip.dto.subjective.AdminSubjectiveDto(" +
+            "s.id, s.question, s.category.name, s.updatedAt, s.deletedAt) " +
+            "from Subjective s " +
+            "where s.deletedAt is not null")
+    List<AdminSubjectiveDto> findDeletedSubjectives();
 }

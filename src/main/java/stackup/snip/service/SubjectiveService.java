@@ -80,6 +80,14 @@ public class SubjectiveService {
         return subjectiveDtos;
     }
 
+    public List<AdminSubjectiveDto> getAllActiveSubjectives() {
+        return subjectiveJpaRepository.findActiveSubjectives();
+    }
+
+    public List<AdminSubjectiveDto> getAllDeletedSubjectives() {
+        return subjectiveJpaRepository.findDeletedSubjectives();
+    }
+
     public List<CategorySubjectiveDto> getCategorySubjectDto(Long id) {
         List<Subjective> subjectives = subjectiveJpaRepository.getReferenceByCategory_Id(id);
         return subjectives.stream().map(s -> new CategorySubjectiveDto(s.getQuestion()))
