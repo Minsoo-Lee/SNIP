@@ -46,4 +46,6 @@ public interface SubjectiveJpaRepository extends JpaRepository<Subjective, Long>
             "from Subjective s " +
             "where s.deletedAt is not null")
     List<AdminSubjectiveDto> findDeletedSubjectives();
+
+    boolean existsByQuestion(String question);
 }

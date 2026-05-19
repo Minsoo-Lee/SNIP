@@ -93,4 +93,15 @@ public class SubjectiveService {
         return subjectives.stream().map(s -> new CategorySubjectiveDto(s.getQuestion()))
                 .toList();
     }
+
+    public boolean ifExistsByContent(String content) {
+        return subjectiveJpaRepository.existsByQuestion(content);
+    }
+
+    public Subjective save(String categoryName, String content) {
+        Category category = categoryService.save(categoryName);
+        return subjectiveJpaRepository.save(new Subjective(
+                content, category
+        ));
+    }
 }

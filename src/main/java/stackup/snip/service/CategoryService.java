@@ -39,8 +39,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public void save(String categoryName) {
-        categoryJpaRepository.save(new Category(categoryName));
+    public Category save(String categoryName) {
+        return categoryJpaRepository.save(new Category(categoryName));
     }
 
     public List<CategoryListDto> getAllCategories() {

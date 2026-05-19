@@ -54,7 +54,7 @@ public class AdminCategoryController {
         if (result.hasErrors()) {
             model.addAttribute("categoryForm", dto);
             model.addAttribute("currentTab", "categories");
-            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("categories", categoryService.getAllActiveCategories());
             return "sidebar/admin/categories";
         }
         redirectAttributes.addFlashAttribute("successMessage", "성공적으로 저장하였습니다.");
