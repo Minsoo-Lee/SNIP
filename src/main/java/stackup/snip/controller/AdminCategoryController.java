@@ -29,14 +29,8 @@ public class AdminCategoryController {
             Model model,
             @RequestParam(defaultValue = "active") String filter
     ) {
-        List<CategoryListDto> categories = switch (filter) {
-            case "deleted" -> categoryService.getDeletedCategories();
-            case "all" -> categoryService.getAllCategories();
-            default -> categoryService.getAllActiveCategories();
-        };
-        model.addAttribute("categories", categories);
+        setCategoryPage(model, filter);
         model.addAttribute("categoryForm", new SaveCategoryDto());
-        model.addAttribute("filter", filter);
         model.addAttribute("mode", "create");
         return "sidebar/admin/categories";
     }
@@ -72,6 +66,7 @@ public class AdminCategoryController {
         model.addAttribute("mode", "edit");
         model.addAttribute("categories", categoryService.getAllActiveCategories());
         model.addAttribute("filter", "active");
+        model.addAttribute("currentTab", "categories");
         return "sidebar/admin/categories";
     }
 
@@ -80,6 +75,7 @@ public class AdminCategoryController {
             @PathVariable Long id,
             @ModelAttribute("category") CategoryEditDto dto,
             BindingResult result,
+            @RequestParam(defaultValue = "active") String filter,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
@@ -88,10 +84,9 @@ public class AdminCategoryController {
         }
         if (result.hasErrors()) {
             dto.setId(id);
+            setCategoryPage(model, filter);
             model.addAttribute("category", dto);
-            model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("mode", "edit");
-            model.addAttribute("currentTab", "categories");
             return "sidebar/admin/categories";
         }
         categoryService.changeName(id, dto.getName());
@@ -117,6 +112,7 @@ public class AdminCategoryController {
         model.addAttribute("subjectives", subjectives);
         model.addAttribute("count", subjectives.size());
         model.addAttribute("filter", "active");
+        model.addAttribute("currentTab", "categories");
         return "sidebar/admin/categories";
     }
 
@@ -128,5 +124,20 @@ public class AdminCategoryController {
         categoryService.softDeleteCategory(id);
         redirectAttributes.addFlashAttribute("successMessage", "삭제가 완료되었습니다.");
         return "redirect:/admin/categories";
+    }
+
+    private void setCategoryPage(
+            Model model,
+            String filter
+    ) {
+        List<CategoryListDto> categories = switch (filter) {
+            case "deleted" -> categoryService.getDeletedCategories();
+            case "all" -> categoryService.getAllCategories();
+            default -> categoryService.getAllActiveCategories();
+        };
+        model.addAttribute("categories", categories);
+        model.addAttribute("filter", filter);
+        model.addAttribute("currentTab", "categories");
+
     }
 }

@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.category.CategoryDetailDto;
 import stackup.snip.dto.category.CategoryListDto;
 import stackup.snip.entity.Category;
+import stackup.snip.entity.Subjective;
 import stackup.snip.repository.jpa.CategoryJpaRepository;
+import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryJpaRepository categoryJpaRepository;
+    private final SubjectiveJpaRepository subjectiveJpaRepository;
 
     public Category getOneByName(String name) {
         List<Category> categories = categoryJpaRepository.findCategoryByName(name);
@@ -77,5 +80,10 @@ public class CategoryService {
     public void softDeleteCategory(Long id) {
         Category category = categoryJpaRepository.getReferenceById(id);
         category.softDelete();
+
+        List<Subjective> subjectives = subjectiveJpaRepository.findByCategory(category);
+        for (Subjective subjective : subjectives) {
+            subjective.softDelete();
+        }
     }
 }

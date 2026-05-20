@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaveSubjectiveDto {
+public class SubjectiveSaveDto {
 
     private String categoryName;
     private String content;

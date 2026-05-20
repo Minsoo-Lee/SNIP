@@ -48,4 +48,6 @@ public interface SubjectiveJpaRepository extends JpaRepository<Subjective, Long>
     List<AdminSubjectiveDto> findDeletedSubjectives();
 
     boolean existsByQuestion(String question);
+
+    List<Subjective> findByCategory(Category category);
 }

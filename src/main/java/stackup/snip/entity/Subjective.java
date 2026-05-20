@@ -26,4 +26,10 @@ public class Subjective extends TimeBaseEntity {
         this.category = category;
         initUpdatedAt();
     }
+
+    //== 수정 메서드 ==//
+    public void changeQuestion(String question) {
+        this.question = question;
+        changeUpdatedAt();
+    }
 }

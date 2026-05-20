@@ -33,15 +33,33 @@
       <div class="mb-3">
         <label class="form-label">카테고리명</label>
 
-        <input th:fiels="*{category}" class="form-control">
+        <select name="selectedCategory" class="form-select" required>
+          <option th:value="*{categoryName}"
+                  th:text="*{categoryName}"
+                  selected>
+          </option>
 
-        <input th:field="*{name}"
+          <!-- 나머지 카테고리 -->
+          <option th:each="category : ${categories}"
+                  th:if="${category.name != subjective.categoryName}"
+                  th:value="${category.name}"
+                  th:text="${category.name}">
+          </option>
+        </select>
+<!--        <input th:field="*{categoryName}" class="form-control">-->
+      </div>
+
+      <div class="mb-3">
+
+        <label class="form-label">내용</label>
+
+        <input th:field="*{content}"
                class="form-control"
-               th:classappend="${#fields.hasErrors('name')} ? ' is-invalid'"/>
+               th:classappend="${#fields.hasErrors('content')} ? ' is-invalid'"/>
 
         <div class="invalid-feedback"
-             th:if="${#fields.hasErrors('name')}"
-             th:errors="*{name}">
+             th:if="${#fields.hasErrors('content')}"
+             th:errors="*{content}">
         </div>
       </div>
 

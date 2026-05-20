@@ -35,6 +35,7 @@ public class AdminMemberController {
         model.addAttribute("memberForm", new MemberFormDto());
         model.addAttribute("filter", filter);
         model.addAttribute("mode", "create");
+        model.addAttribute("currentTab", "members");
 
         return "sidebar/admin/members";
     }
@@ -116,6 +117,7 @@ public class AdminMemberController {
         model.addAttribute("members", memberService.getAllActiveMembers());
         model.addAttribute("filter", "active");
         model.addAttribute("mode", "delete");
+        model.addAttribute("currentTab", "members");
         return "sidebar/admin/members";
     }
 

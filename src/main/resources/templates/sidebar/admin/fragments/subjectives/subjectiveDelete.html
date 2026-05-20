@@ -16,7 +16,7 @@
       </p>
 
       <div class="alert alert-secondary">
-        <strong th:text="${subjective.content}"></strong>
+        [<strong th:text="${subjective.categoryName}"></strong>] <strong th:text="${subjective.content}"></strong>
       </div>
 
       <form th:action="@{/admin/subjectives/{id}/delete(id=${subjective.id})}"
