@@ -23,7 +23,7 @@ spring:
 
   messages:
     basename: messages,errors
-    encoding: UTF-8
+    encodig: UTF-8
 
   # 노션 관련 설정
   mvc:
@@ -32,3 +32,4 @@ spring:
 
 server:
   port: 9090
+  forward-headers-strategy: framework
