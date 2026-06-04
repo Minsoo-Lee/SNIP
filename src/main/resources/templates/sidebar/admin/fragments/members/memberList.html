@@ -60,6 +60,15 @@
       </button>
     </div>
 
+    <!-- 🔥 여기다 넣는 거 -->
+    <div class="col-auto"
+         th:if="${cond.keyword != null and cond.keyword != ''}">
+      <a th:href="@{/admin/members(filter=${cond.filter})}"
+         class="btn btn-sm btn-outline-secondary">
+        초기화
+      </a>
+    </div>
+
   </form>
 
   <table class="table table-hover align-middle">
@@ -81,7 +90,7 @@
       <td th:text="${member.nickname}"></td>
       <td th:text="${member.email}"></td>
 
-      <td th:if="${filter == 'active' or filter == 'all'}">
+      <td th:if="${cond.filter == 'active' or cond.filter == 'all'}">
         <!-- 삭제된 회원 우선 표시 -->
         <span class="badge bg-dark" th:if="${member.deletedAt != null}">
           삭제됨

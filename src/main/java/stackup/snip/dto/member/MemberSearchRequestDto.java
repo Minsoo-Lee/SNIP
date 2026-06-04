@@ -10,4 +10,12 @@ public class MemberSearchRequestDto {
     private String filter = "active";
     private String searchType;
     private String keyword;
+
+    public MemberSearchRequestDto() {
+
+    }
+
+    public MemberSearchRequestDto(String filter) {
+        this.filter = filter;
+    }
 }

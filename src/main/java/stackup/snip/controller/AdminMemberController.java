@@ -27,10 +27,8 @@ public class AdminMemberController {
             @ModelAttribute MemberSearchRequestDto dto,
             Model model
     ) {
-        setMemberPage(model, dto);
-        model.addAttribute("memberForm", new MemberFormDto());
+        setMemberPage(model, dto, new MemberFormDto());
         model.addAttribute("mode", "create");
-
         return "sidebar/admin/members";
     }
 
@@ -45,9 +43,7 @@ public class AdminMemberController {
             result.rejectValue("confirmPassword", "settings.password.confirm.notMatch");
         }
         if (result.hasErrors()) {
-            model.addAttribute("members", memberService.getAllActiveMembers());
-            model.addAttribute("memberForm", memberForm);
-            model.addAttribute("currentTab", "members");
+            setMemberPage(model, new MemberSearchRequestDto(), memberForm);
             return "sidebar/admin/members";
         }
         memberService.save(memberForm);
@@ -61,11 +57,8 @@ public class AdminMemberController {
             Model model
     ) {
         log.info("model = {}", model.asMap());
-        List<MemberListDto> members = memberService.getAllActiveMembers();
         MemberFormDto memberDetailDto = memberService.getMemberById(id);
-        model.addAttribute("members", members);
-        model.addAttribute("memberForm", memberDetailDto);
-        model.addAttribute("filter", "active");
+        setMemberPage(model, new MemberSearchRequestDto(), memberDetailDto);
         model.addAttribute("mode", "edit");
         return "sidebar/admin/members";
     }
@@ -84,10 +77,8 @@ public class AdminMemberController {
         }
         if (result.hasErrors()) {
             memberForm.setId(id);
-            model.addAttribute("memberForm", memberForm);
-            model.addAttribute("members", memberService.getAllDeletedMembers());
+            setMemberPage(model, new MemberSearchRequestDto("deleted"), memberForm);
             model.addAttribute("mode", "edit");
-            model.addAttribute("currentTab", "members");
             return "sidebar/admin/members";
         }
         memberService.changePassword(id, memberForm.getPassword());
@@ -104,11 +95,8 @@ public class AdminMemberController {
             Model model
     ) {
         MemberFormDto memberForm = memberService.getMemberById(id);
-        model.addAttribute("memberForm", memberForm);
-        model.addAttribute("members", memberService.getAllActiveMembers());
-        model.addAttribute("filter", "active");
+        setMemberPage(model, new MemberSearchRequestDto(), memberForm);
         model.addAttribute("mode", "delete");
-        model.addAttribute("currentTab", "members");
         return "sidebar/admin/members";
     }
 
@@ -122,8 +110,9 @@ public class AdminMemberController {
         return "redirect:/admin/members";
     }
 
-    private void setMemberPage(Model model, MemberSearchRequestDto dto) {
+    private void setMemberPage(Model model, MemberSearchRequestDto dto, MemberFormDto memberForm) {
         List<MemberListDto> members = memberService.getMembersByCondition(dto);
+        model.addAttribute("memberForm", memberForm);
         model.addAttribute("members", members);
         model.addAttribute("cond", dto);
         model.addAttribute("currentTab", "members");

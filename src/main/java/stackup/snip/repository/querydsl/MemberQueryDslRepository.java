@@ -41,8 +41,8 @@ public class MemberQueryDslRepository {
             return null;
         }
         return switch (searchType) {
-            case ("nickname") -> member.nickname.like(keyword);
-            default -> member.email.like(keyword);
+            case ("nickname") -> member.nickname.contains(keyword);
+            default -> member.email.contains(keyword);
         };
     }
 }
