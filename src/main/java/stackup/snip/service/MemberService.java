@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.member.MemberFormDto;
 import stackup.snip.dto.member.MemberListDto;
+import stackup.snip.dto.member.MemberSearchRequestDto;
 import stackup.snip.entity.Member;
 import stackup.snip.exception.login.EmailDuplicateException;
 import stackup.snip.exception.login.EmailNotExistException;
 import stackup.snip.exception.login.LoginPasswordNotMatchException;
 import stackup.snip.exception.login.NicknameDuplicateException;
 import stackup.snip.repository.jpa.MemberJpaRepository;
+import stackup.snip.repository.querydsl.MemberQueryDslRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.Objects;
 public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
+    private final MemberQueryDslRepository memberQueryDslRepository;
 
     @Transactional
     public Member register(String email, String nickname, String password, LocalDateTime registeredTime, int streak) {
@@ -109,6 +112,18 @@ public class MemberService {
 
     public List<MemberListDto> getAllActiveMembers() {
         List<Member> members = memberJpaRepository.findAllNotDeleted();
+        return members.stream().map(m -> new MemberListDto(
+                m.getId(),
+                m.getNickname(),
+                m.getEmail(),
+                m.getLastLoginDate(),
+                m.getUpdatedAt(),
+                m.getDeletedAt())
+        ).toList();
+    }
+
+    public List<MemberListDto> getMembersByCondition(MemberSearchRequestDto dto) {
+        List<Member> members = memberQueryDslRepository.findMembersByCondition(dto);
         return members.stream().map(m -> new MemberListDto(
                 m.getId(),
                 m.getNickname(),

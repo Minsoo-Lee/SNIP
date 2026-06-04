@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import stackup.snip.dto.member.MemberFormDto;
 import stackup.snip.dto.member.MemberListDto;
+import stackup.snip.dto.member.MemberSearchRequestDto;
 import stackup.snip.service.MemberService;
 
 import java.util.List;
@@ -23,19 +24,12 @@ public class AdminMemberController {
 
     @GetMapping
     public String memberList(
-            @RequestParam(defaultValue = "active") String filter,
+            @ModelAttribute MemberSearchRequestDto dto,
             Model model
     ) {
-        List<MemberListDto> members = switch (filter) {
-            case "deleted" -> memberService.getAllDeletedMembers();
-            case "all" -> memberService.getAllMembers();
-            default -> memberService.getAllActiveMembers();
-        };
-        model.addAttribute("members", members);
+        setMemberPage(model, dto);
         model.addAttribute("memberForm", new MemberFormDto());
-        model.addAttribute("filter", filter);
         model.addAttribute("mode", "create");
-        model.addAttribute("currentTab", "members");
 
         return "sidebar/admin/members";
     }
@@ -51,9 +45,6 @@ public class AdminMemberController {
             result.rejectValue("confirmPassword", "settings.password.confirm.notMatch");
         }
         if (result.hasErrors()) {
-            log.info("에러 발생!!!!!");
-            log.info("에러 목록: {}", result.getAllErrors()); // ✅ 추가
-//            model.addAttribute("members", memberService.getAllDeletedMembers());
             model.addAttribute("members", memberService.getAllActiveMembers());
             model.addAttribute("memberForm", memberForm);
             model.addAttribute("currentTab", "members");
@@ -129,5 +120,12 @@ public class AdminMemberController {
         memberService.deleteMember(id);
         redirectAttributes.addFlashAttribute("successMessage", "삭제가 완료되었습니다.");
         return "redirect:/admin/members";
+    }
+
+    private void setMemberPage(Model model, MemberSearchRequestDto dto) {
+        List<MemberListDto> members = memberService.getMembersByCondition(dto);
+        model.addAttribute("members", members);
+        model.addAttribute("cond", dto);
+        model.addAttribute("currentTab", "members");
     }
 }

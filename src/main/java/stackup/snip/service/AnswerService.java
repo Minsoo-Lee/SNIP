@@ -14,7 +14,7 @@ import stackup.snip.entity.Member;
 import stackup.snip.entity.Subjective;
 import stackup.snip.exception.subjective.AnswerBlankException;
 import stackup.snip.repository.jpa.AnswerJpaRepository;
-import stackup.snip.repository.jpa.AnswerQuerydslRepository;
+import stackup.snip.repository.querydsl.AnswerQuerydslRepository;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
 
