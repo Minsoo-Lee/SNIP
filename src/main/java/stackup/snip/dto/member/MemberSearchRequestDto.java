@@ -11,6 +11,9 @@ public class MemberSearchRequestDto {
     private String searchType;
     private String keyword;
 
+    private int page = 0;
+    private int size = 10;
+
     public MemberSearchRequestDto() {
 
     }

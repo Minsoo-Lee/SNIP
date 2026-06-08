@@ -2,6 +2,9 @@ package stackup.snip.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.member.MemberFormDto;
@@ -122,9 +125,9 @@ public class MemberService {
         ).toList();
     }
 
-    public List<MemberListDto> getMembersByCondition(MemberSearchRequestDto dto) {
-        List<Member> members = memberQueryDslRepository.findMembersByCondition(dto);
-        return members.stream().map(m -> new MemberListDto(
+    public Page<MemberListDto> getMembersByCondition(MemberSearchRequestDto dto) {
+        Page<Member> page = memberQueryDslRepository.findMembersByCondition(dto);
+        List<MemberListDto> content = page.getContent().stream().map(m -> new MemberListDto(
                 m.getId(),
                 m.getNickname(),
                 m.getEmail(),
@@ -132,6 +135,8 @@ public class MemberService {
                 m.getUpdatedAt(),
                 m.getDeletedAt())
         ).toList();
+
+        return new PageImpl<>(content, PageRequest.of(dto.getPage(), dto.getSize()), page.getTotalElements());
     }
 
     @Transactional

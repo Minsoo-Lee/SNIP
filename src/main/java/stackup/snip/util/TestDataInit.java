@@ -23,20 +23,38 @@ public class TestDataInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Member member1 = new Member(
-                "test@test.com",
-                "test",
-                "1234",
-                LocalDateTime.now()
-        );
+//        Member member1 = new Member(
+//                "test@test.com",
+//                "test",
+//                "1234",
+//                LocalDateTime.now()
+//        );
+//        Member admin = new Member(
+//                "admin@admin.dev",
+//                "admin",
+//                "1234",
+//                LocalDateTime.now()
+//        );
+//        memberJpaRepository.save(member1);
+//        memberJpaRepository.save(admin);
+//        subjectiveService.importFromNotion();
+
         Member admin = new Member(
                 "admin@admin.dev",
                 "admin",
                 "1234",
                 LocalDateTime.now()
         );
-        memberJpaRepository.save(member1);
         memberJpaRepository.save(admin);
+        for (int i = 0; i < 100; i++) {
+            Member member = new Member(
+                "test" + i + "@test.com",
+                "test" + i,
+                "1234",
+                LocalDateTime.now()
+            );
+            memberJpaRepository.save(member);
+        }
         subjectiveService.importFromNotion();
     }
 }

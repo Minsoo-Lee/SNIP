@@ -2,6 +2,10 @@ package stackup.snip.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +29,8 @@ public class AdminMemberController {
     @GetMapping
     public String memberList(
             @ModelAttribute MemberSearchRequestDto dto,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+            Pageable pageable,
             Model model
     ) {
         setMemberPage(model, dto, new MemberFormDto());
@@ -111,9 +117,23 @@ public class AdminMemberController {
     }
 
     private void setMemberPage(Model model, MemberSearchRequestDto dto, MemberFormDto memberForm) {
-        List<MemberListDto> members = memberService.getMembersByCondition(dto);
+        Page<MemberListDto> page =
+                memberService.getMembersByCondition(dto);
+
+        int currentPage = page.getNumber(); // 0-base
+        int blockSize = 10;
+
+        int startPage = (currentPage / blockSize) * blockSize;
+        int endPage = Math.min(startPage + blockSize - 1, page.getTotalPages() - 1);
+
         model.addAttribute("memberForm", memberForm);
-        model.addAttribute("members", members);
+        model.addAttribute("members", page.getContent());
+        model.addAttribute("page", page);
+
+        // 🔥 블록 페이징용 추가
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
         model.addAttribute("cond", dto);
         model.addAttribute("currentTab", "members");
     }
