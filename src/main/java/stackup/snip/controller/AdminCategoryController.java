@@ -1,21 +1,20 @@
 package stackup.snip.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import stackup.snip.dto.category.CategoryDetailDto;
-import stackup.snip.dto.category.CategoryEditDto;
-import stackup.snip.dto.category.CategoryListDto;
-import stackup.snip.dto.category.SaveCategoryDto;
+import stackup.snip.dto.category.*;
 import stackup.snip.dto.subjective.CategorySubjectiveDto;
 import stackup.snip.service.CategoryService;
 import stackup.snip.service.SubjectiveService;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/admin/categories")
 @RequiredArgsConstructor
@@ -26,33 +25,30 @@ public class AdminCategoryController {
 
     @GetMapping
     public String categoryList(
-            Model model,
-            @RequestParam(defaultValue = "active") String filter
+            @ModelAttribute CategorySearchRequestDto dto,
+            Model model
     ) {
-        setCategoryPage(model, filter);
-        model.addAttribute("categoryForm", new SaveCategoryDto());
+        setCategoryPage(model, dto, new CategoryFormDto());
         model.addAttribute("mode", "create");
         return "sidebar/admin/categories";
     }
 
     @PostMapping
     public String saveCategory(
-            @ModelAttribute("categoryForm") SaveCategoryDto dto,
+            @ModelAttribute("categoryForm") CategoryFormDto categoryForm,
             BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
-        if (categoryService.ifExistsByName(dto.getName())) {
-            result.rejectValue("name", null, "[" + dto.getName() + "]: 중복된 카테고리입니다.");
+        if (categoryService.ifExistsByName(categoryForm.getName())) {
+            result.rejectValue("name", null, "[" + categoryForm.getName() + "]: 중복된 카테고리입니다.");
         }
         if (result.hasErrors()) {
-            model.addAttribute("categoryForm", dto);
-            model.addAttribute("currentTab", "categories");
-            model.addAttribute("categories", categoryService.getAllActiveCategories());
+            setCategoryPage(model, new CategorySearchRequestDto(), categoryForm);
             return "sidebar/admin/categories";
         }
+        categoryService.save(categoryForm.getName());
         redirectAttributes.addFlashAttribute("successMessage", "성공적으로 저장하였습니다.");
-        categoryService.save(dto.getName());
         return "redirect:/admin/categories";
     }
 
@@ -61,35 +57,30 @@ public class AdminCategoryController {
             @PathVariable Long id,
             Model model
     ) {
-        CategoryDetailDto categoryDetailDto = categoryService.getCategoryDetailDtoById(id);
-        model.addAttribute("category", categoryDetailDto);
+        CategoryFormDto categoryFormDto = categoryService.getCategoryDetailDtoById(id);
+        setCategoryPage(model, new CategorySearchRequestDto(), categoryFormDto);
         model.addAttribute("mode", "edit");
-        model.addAttribute("categories", categoryService.getAllActiveCategories());
-        model.addAttribute("filter", "active");
-        model.addAttribute("currentTab", "categories");
         return "sidebar/admin/categories";
     }
 
     @PostMapping("/{id}")
     public String categoryEdit(
             @PathVariable Long id,
-            @ModelAttribute("category") CategoryEditDto dto,
+            @ModelAttribute("category") CategoryFormDto categoryForm,
             BindingResult result,
-            @RequestParam(defaultValue = "active") String filter,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
-        if (categoryService.ifExistsByName(dto.getName())) {
-            result.rejectValue("name", null, "[" + dto.getName() + "]: 중복된 카테고리입니다.");
+        if (categoryService.ifExistsByName(categoryForm.getName())) {
+            result.rejectValue("name", null, "[" + categoryForm.getName() + "]: 중복된 카테고리입니다.");
         }
         if (result.hasErrors()) {
-            dto.setId(id);
-            setCategoryPage(model, filter);
-            model.addAttribute("category", dto);
+            categoryForm.setId(id);
+            setCategoryPage(model, new CategorySearchRequestDto(), categoryForm);
             model.addAttribute("mode", "edit");
             return "sidebar/admin/categories";
         }
-        categoryService.changeName(id, dto.getName());
+        categoryService.changeName(id, categoryForm.getName());
         redirectAttributes.addFlashAttribute("successMessage", "수정이 완료되었습니다.");
         return "redirect:/admin/categories/{id}";
     }
@@ -103,16 +94,14 @@ public class AdminCategoryController {
             @PathVariable Long id,
             Model model
     ) {
-        CategoryDetailDto categoryDetailDto = categoryService.getCategoryDetailDtoById(id);
+        CategoryFormDto categoryForm = categoryService.getCategoryDetailDtoById(id);
         List<CategorySubjectiveDto> subjectives = subjectiveService.getCategorySubjectDto(id);
 
-        model.addAttribute("category", categoryDetailDto);
+        setCategoryPage(model, new CategorySearchRequestDto(), categoryForm);
+
         model.addAttribute("mode", "delete");
-        model.addAttribute("categories", categoryService.getAllActiveCategories());
         model.addAttribute("subjectives", subjectives);
         model.addAttribute("count", subjectives.size());
-        model.addAttribute("filter", "active");
-        model.addAttribute("currentTab", "categories");
         return "sidebar/admin/categories";
     }
 
@@ -128,16 +117,13 @@ public class AdminCategoryController {
 
     private void setCategoryPage(
             Model model,
-            String filter
+            CategorySearchRequestDto cond,
+            CategoryFormDto categoryForm
     ) {
-        List<CategoryListDto> categories = switch (filter) {
-            case "deleted" -> categoryService.getDeletedCategories();
-            case "all" -> categoryService.getAllCategories();
-            default -> categoryService.getAllActiveCategories();
-        };
+        List<CategoryListDto> categories = categoryService.getCategoriesByCondition(cond);
+        model.addAttribute("categoryForm", categoryForm);
         model.addAttribute("categories", categories);
-        model.addAttribute("filter", filter);
+        model.addAttribute("cond", cond);
         model.addAttribute("currentTab", "categories");
-
     }
 }

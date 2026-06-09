@@ -5,11 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.category.CategoryDetailDto;
+import stackup.snip.dto.category.CategoryFormDto;
 import stackup.snip.dto.category.CategoryListDto;
+import stackup.snip.dto.category.CategorySearchRequestDto;
 import stackup.snip.entity.Category;
 import stackup.snip.entity.Subjective;
 import stackup.snip.repository.jpa.CategoryJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
+import stackup.snip.repository.querydsl.CategoryQueryDslRepository;
+import stackup.snip.repository.querydsl.MemberQueryDslRepository;
 
 import java.util.List;
 
@@ -21,13 +25,14 @@ public class CategoryService {
 
     private final CategoryJpaRepository categoryJpaRepository;
     private final SubjectiveJpaRepository subjectiveJpaRepository;
+    private final CategoryQueryDslRepository categoryQueryDslRepository;
 
     public Category getOneByName(String name) {
         List<Category> categories = categoryJpaRepository.findCategoryByName(name);
         return categories.getFirst();
     }
 
-    public CategoryDetailDto getCategoryDetailDtoById(Long id) {
+    public CategoryFormDto getCategoryDetailDtoById(Long id) {
         return categoryJpaRepository.findCategoryDtoById(id);
     }
 
@@ -85,5 +90,16 @@ public class CategoryService {
         for (Subjective subjective : subjectives) {
             subjective.softDelete();
         }
+    }
+
+    public List<CategoryListDto> getCategoriesByCondition(CategorySearchRequestDto dto) {
+        List<Category> categories = categoryQueryDslRepository.findCategoriesByCondition(dto);
+
+        return categories.stream().map(c -> new CategoryListDto(
+                c.getId(),
+                c.getName(),
+                c.getUpdatedAt(),
+                c.getDeletedAt()
+        )).toList();
     }
 }

@@ -29,8 +29,6 @@ public class AdminMemberController {
     @GetMapping
     public String memberList(
             @ModelAttribute MemberSearchRequestDto dto,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
-            Pageable pageable,
             Model model
     ) {
         setMemberPage(model, dto, new MemberFormDto());
@@ -62,7 +60,6 @@ public class AdminMemberController {
             @PathVariable Long id,
             Model model
     ) {
-        log.info("model = {}", model.asMap());
         MemberFormDto memberDetailDto = memberService.getMemberById(id);
         setMemberPage(model, new MemberSearchRequestDto(), memberDetailDto);
         model.addAttribute("mode", "edit");

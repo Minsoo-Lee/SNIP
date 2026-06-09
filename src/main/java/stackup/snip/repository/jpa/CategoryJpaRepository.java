@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import stackup.snip.dto.category.CategoryDetailDto;
+import stackup.snip.dto.category.CategoryFormDto;
 import stackup.snip.dto.category.CategoryListDto;
 import stackup.snip.entity.Category;
 
@@ -15,11 +16,11 @@ public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
 
     List<Category> findCategoryByName(String name);
 
-    @Query("select new stackup.snip.dto.category.CategoryDetailDto(" +
+    @Query("select new stackup.snip.dto.category.CategoryFormDto(" +
             "c.id, c.name) " +
             "from Category c " +
             "where c.id = :id")
-    CategoryDetailDto findCategoryDtoById(Long id);
+    CategoryFormDto findCategoryDtoById(Long id);
 
     boolean existsByName(String name);
 

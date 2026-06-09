@@ -24,8 +24,8 @@
 
     <h5 class="mb-3">카테고리 수정</h5>
 
-    <form th:action="@{/admin/categories/{id}(id=${category.id})}"
-          th:object="${category}"
+    <form th:action="@{/admin/categories/{id}(id=${categoryForm.id})}"
+          th:object="${categoryForm}"
           method="post">
 
       <div class="mb-3">
@@ -58,7 +58,7 @@
       <p class="text-muted small mb-3">
         삭제된 카테고리는 복구할 수 없습니다.
       </p>
-      <a th:href="@{/admin/categories/{id}/delete(id=${category.id})}"
+      <a th:href="@{/admin/categories/{id}/delete(id=${categoryForm.id})}"
          class="btn btn-danger">
         카테고리 삭제
       </a>

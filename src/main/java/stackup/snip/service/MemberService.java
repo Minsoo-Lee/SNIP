@@ -152,7 +152,6 @@ public class MemberService {
     public MemberFormDto getMemberById(Long id) {
         Member member = memberJpaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. id=" + id));
-        log.info("[service] member = " + member);
         return new MemberFormDto(
                 member.getId(),
                 member.getEmail(),

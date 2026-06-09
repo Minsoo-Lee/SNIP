@@ -10,23 +10,54 @@
   <!-- 필터 버튼 -->
   <div class="btn-group mb-3" role="group">
     <a class="btn btn-sm"
-       th:classappend="${filter == 'active'} ? ' btn-dark' : ' btn-outline-dark'"
+       th:classappend="${cond.filter == 'active'} ? ' btn-dark' : ' btn-outline-dark'"
        th:href="@{/admin/categories(filter='active')}">
       사용 중
     </a>
 
     <a class="btn btn-sm"
-       th:classappend="${filter == 'deleted'} ? ' btn-dark' : ' btn-outline-dark'"
+       th:classappend="${cond.filter == 'deleted'} ? ' btn-dark' : ' btn-outline-dark'"
        th:href="@{/admin/categories(filter='deleted')}">
       삭제됨
     </a>
 
     <a class="btn btn-sm"
-       th:classappend="${filter == 'all'} ? ' btn-dark' : ' btn-outline-dark'"
+       th:classappend="${cond.filter == 'all'} ? ' btn-dark' : ' btn-outline-dark'"
        th:href="@{/admin/categories(filter='all')}">
       전체 보기
     </a>
   </div>
+
+  <!-- 검색 -->
+  <form th:action="@{/admin/categories}" method="get" class="row g-2 mb-3">
+
+    <!-- 현재 필터 유지 -->
+    <input type="hidden" name="filter" th:value="${cond.filter}">
+
+    <div class="col">
+      <input type="text"
+             name="keyword"
+             class="form-control form-control-sm"
+             placeholder="검색어 입력"
+             th:value="${cond.keyword}">
+    </div>
+
+    <div class="col-auto">
+      <button type="submit" class="btn btn-sm btn-primary">
+        검색
+      </button>
+    </div>
+
+    <!-- 🔥 여기다 넣는 거 -->
+    <div class="col-auto"
+         th:if="${cond.keyword != null and cond.keyword != ''}">
+      <a th:href="@{/admin/categories(filter=${cond.filter})}"
+         class="btn btn-sm btn-outline-secondary">
+        초기화
+      </a>
+    </div>
+
+  </form>
 
   <table class="table table-hover align-middle">
     <thead>
@@ -34,15 +65,15 @@
       <th>ID</th>
       <th>카테고리</th>
 
-      <th th:if="${filter == 'active' or filter == 'all'}">
+      <th th:if="${cond.filter == 'active' or cond.filter == 'all'}">
         상태
       </th>
 
-      <th th:if="${filter == 'active' or filter == 'all'}">
+      <th th:if="${cond.filter == 'active' or cond.filter == 'all'}">
         수정일
       </th>
 
-      <th th:if="${filter == 'deleted' or filter == 'all'}">
+      <th th:if="${cond.filter == 'deleted' or cond.filter == 'all'}">
         삭제일
       </th>
     </tr>
@@ -59,7 +90,7 @@
       <td th:text="${c.name}"></td>
 
       <!-- 상태 -->
-      <td th:if="${filter == 'active' or filter == 'all'}">
+      <td th:if="${cond.filter == 'active' or cond.filter == 'all'}">
 
         <span class="badge bg-success"
               th:if="${c.deletedAt == null}">
@@ -74,14 +105,14 @@
       </td>
 
       <!-- 수정일 -->
-      <td th:if="${filter == 'active' or filter == 'all'}">
+      <td th:if="${cond.filter == 'active' or cond.filter == 'all'}">
         <span th:text="${c.deletedAt == null
             ? #temporals.format(c.updatedAt, 'yyyy-MM-dd HH:mm')
             : '-'}"></span>
       </td>
 
       <!-- 삭제일 -->
-      <td th:if="${filter == 'deleted' or filter == 'all'}">
+      <td th:if="${cond.filter == 'deleted' or cond.filter == 'all'}">
         <span th:text="${c.deletedAt != null
             ? #temporals.format(c.deletedAt, 'yyyy-MM-dd HH:mm')
             : '-'}"></span>

@@ -16,7 +16,7 @@
       </p>
 
       <div class="alert alert-secondary">
-        <strong th:text="${category.name}"></strong>
+        <strong th:text="${categoryForm.name}"></strong>
       </div>
 
       <div th:if="${!#lists.isEmpty(subjectives)}"
@@ -40,14 +40,14 @@
 
       </div>
 
-      <form th:action="@{/admin/categories/{id}/delete(id=${category.id})}"
+      <form th:action="@{/admin/categories/{id}/delete(id=${categoryForm.id})}"
             method="post">
 
         <button class="btn btn-danger">
           삭제하기
         </button>
 
-        <a th:href="@{/admin/categories/{id}/edit(id=${category.id})}"
+        <a th:href="@{/admin/categories/{id}/edit(id=${categoryForm.id})}"
            class="btn btn-secondary">
           취소
         </a>

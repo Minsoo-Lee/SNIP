@@ -81,6 +81,7 @@
       <th th:if="${cond.filter == 'active' or cond.filter == 'all'}">수정일</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="member : ${members}"
         style="cursor:pointer;"
