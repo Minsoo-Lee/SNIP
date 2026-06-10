@@ -130,10 +130,9 @@
           th:classappend="${page.first} ? ' disabled'">
 
         <a class="page-link"
-           th:href="@{/admin/members(
+           th:href="@{/admin/categories(
             page=0,
             filter=${cond.filter},
-            searchType=${cond.searchType},
             keyword=${cond.keyword}
          )}">
           &laquo;
@@ -145,10 +144,9 @@
           th:classappend="${startPage == 0} ? ' disabled'">
 
         <a class="page-link"
-           th:href="@{/admin/members(
+           th:href="@{/admin/categories(
             page=${startPage - 1},
             filter=${cond.filter},
-            searchType=${cond.searchType},
             keyword=${cond.keyword}
          )}">
           이전
@@ -162,10 +160,9 @@
 
         <a class="page-link"
            th:text="${i + 1}"
-           th:href="@{/admin/members(
+           th:href="@{/admin/categories(
             page=${i},
             filter=${cond.filter},
-            searchType=${cond.searchType},
             keyword=${cond.keyword}
          )}">
         </a>
@@ -176,10 +173,9 @@
           th:classappend="${endPage >= page.totalPages - 1} ? ' disabled'">
 
         <a class="page-link"
-           th:href="@{/admin/members(
+           th:href="@{/admin/categories(
             page=${endPage + 1},
             filter=${cond.filter},
-            searchType=${cond.searchType},
             keyword=${cond.keyword}
          )}">
           다음
@@ -191,10 +187,9 @@
           th:classappend="${page.last} ? ' disabled'">
 
         <a class="page-link"
-           th:href="@{/admin/members(
+           th:href="@{/admin/categories(
             page=${page.totalPages - 1},
             filter=${cond.filter},
-            searchType=${cond.searchType},
             keyword=${cond.keyword}
          )}">
           &raquo;
