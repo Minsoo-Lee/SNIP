@@ -2,6 +2,9 @@ package stackup.snip.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.category.CategoryDetailDto;
@@ -92,14 +95,16 @@ public class CategoryService {
         }
     }
 
-    public List<CategoryListDto> getCategoriesByCondition(CategorySearchRequestDto dto) {
-        List<Category> categories = categoryQueryDslRepository.findCategoriesByCondition(dto);
+    public Page<CategoryListDto> getCategoriesByCondition(CategorySearchRequestDto dto) {
+        Page<Category> page = categoryQueryDslRepository.findCategoriesByCondition(dto);
 
-        return categories.stream().map(c -> new CategoryListDto(
+        List<CategoryListDto> content = page.getContent().stream().map(c -> new CategoryListDto(
                 c.getId(),
                 c.getName(),
                 c.getUpdatedAt(),
                 c.getDeletedAt()
         )).toList();
+
+        return new PageImpl<>(content, PageRequest.of(dto.getPage(), dto.getSize()), page.getTotalElements());
     }
 }

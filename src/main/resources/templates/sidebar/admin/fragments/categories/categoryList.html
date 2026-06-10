@@ -122,5 +122,87 @@
     </tbody>
   </table>
 
+  <nav th:if="${page.totalPages > 1}">
+    <ul class="pagination justify-content-center">
+
+      <!-- << 첫 페이지 -->
+      <li class="page-item"
+          th:classappend="${page.first} ? ' disabled'">
+
+        <a class="page-link"
+           th:href="@{/admin/members(
+            page=0,
+            filter=${cond.filter},
+            searchType=${cond.searchType},
+            keyword=${cond.keyword}
+         )}">
+          &laquo;
+        </a>
+      </li>
+
+      <!-- 이전 블록 -->
+      <li class="page-item"
+          th:classappend="${startPage == 0} ? ' disabled'">
+
+        <a class="page-link"
+           th:href="@{/admin/members(
+            page=${startPage - 1},
+            filter=${cond.filter},
+            searchType=${cond.searchType},
+            keyword=${cond.keyword}
+         )}">
+          이전
+        </a>
+      </li>
+
+      <!-- 페이지 번호 -->
+      <li class="page-item"
+          th:each="i : ${#numbers.sequence(startPage, endPage)}"
+          th:classappend="${i == page.number} ? ' active'">
+
+        <a class="page-link"
+           th:text="${i + 1}"
+           th:href="@{/admin/members(
+            page=${i},
+            filter=${cond.filter},
+            searchType=${cond.searchType},
+            keyword=${cond.keyword}
+         )}">
+        </a>
+      </li>
+
+      <!-- 다음 블록 -->
+      <li class="page-item"
+          th:classappend="${endPage >= page.totalPages - 1} ? ' disabled'">
+
+        <a class="page-link"
+           th:href="@{/admin/members(
+            page=${endPage + 1},
+            filter=${cond.filter},
+            searchType=${cond.searchType},
+            keyword=${cond.keyword}
+         )}">
+          다음
+        </a>
+      </li>
+
+      <!-- >> 마지막 페이지 -->
+      <li class="page-item"
+          th:classappend="${page.last} ? ' disabled'">
+
+        <a class="page-link"
+           th:href="@{/admin/members(
+            page=${page.totalPages - 1},
+            filter=${cond.filter},
+            searchType=${cond.searchType},
+            keyword=${cond.keyword}
+         )}">
+          &raquo;
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+
 </div>
 </html>

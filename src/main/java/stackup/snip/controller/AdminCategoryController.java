@@ -2,6 +2,7 @@ package stackup.snip.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -120,9 +121,22 @@ public class AdminCategoryController {
             CategorySearchRequestDto cond,
             CategoryFormDto categoryForm
     ) {
-        List<CategoryListDto> categories = categoryService.getCategoriesByCondition(cond);
+        Page<CategoryListDto> page = categoryService.getCategoriesByCondition(cond);
+
+        int currentPage = page.getNumber(); // 0-base
+        int blockSize = 10;
+
+        int startPage = (currentPage / blockSize) * blockSize;
+        int endPage = Math.min(startPage + blockSize - 1, page.getTotalPages() - 1);
+
         model.addAttribute("categoryForm", categoryForm);
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", page.getContent());
+        model.addAttribute("page", page);
+
+        // 🔥 블록 페이징용 추가
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
         model.addAttribute("cond", cond);
         model.addAttribute("currentTab", "categories");
     }
