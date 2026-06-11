@@ -7,8 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import stackup.snip.dto.category.CategoryDetailDto;
-import stackup.snip.dto.category.CategoryEditDto;
+import stackup.snip.dto.category.CategoryListDto;
 import stackup.snip.dto.category.CategorySelectDto;
 import stackup.snip.dto.subjective.*;
 import stackup.snip.service.CategoryService;
@@ -27,19 +26,18 @@ public class AdminSubjectiveController {
 
     @GetMapping
     public String subjectiveList(
-            @RequestParam(defaultValue = "active") String filter,
+            @ModelAttribute SubjectiveSearchRequestDto dto,
             Model model) {
-        setSubjectivePage(model, filter);
+        setSubjectivePage(model, dto, new SubjectiveFormDto());
 
         model.addAttribute("mode", "create");
-        model.addAttribute("subjectiveForm", new SubjectiveSaveDto());
 
         return "sidebar/admin/subjectives";
     }
 
     @PostMapping
     public String saveSubjective(
-            @ModelAttribute("subjectiveForm") SubjectiveSaveDto dto,
+            @ModelAttribute("subjectiveForm") SubjectiveFormDto dto,
             BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes
@@ -48,9 +46,7 @@ public class AdminSubjectiveController {
            result.rejectValue("content", null, "[" + dto.getContent() + "]: 중복된 문제입니다.");
        }
        if (result.hasErrors()) {
-           model.addAttribute("subjectiveForm", dto);
-           model.addAttribute("currentTab", "subjectives");
-           model.addAttribute("subjectives", subjectiveService.getAllActiveSubjectives());
+           setSubjectivePage(model, new SubjectiveSearchRequestDto(), dto);
            return "sidebar/admin/subjectives";
        }
        redirectAttributes.addFlashAttribute("successMessage", "성공적으로 저장하였습니다.");
@@ -63,38 +59,30 @@ public class AdminSubjectiveController {
             @PathVariable Long id,
             Model model
     ) {
-        SubjectiveDetailDto subjectiveDetailDto = subjectiveService.getSubjectDetailById(id);
-        model.addAttribute("subjective", subjectiveDetailDto);
+        SubjectiveFormDto subjectiveDetailDto = subjectiveService.getSubjectDetailById(id);
+        setSubjectivePage(model, new SubjectiveSearchRequestDto(), subjectiveDetailDto);
         model.addAttribute("mode", "edit");
-        model.addAttribute("subjectives", subjectiveService.getAllActiveSubjectives());
-        model.addAttribute("filter", "active");
-        model.addAttribute("categories", categoryService.getAllActiveCategories());
-        model.addAttribute("currentTab", "subjectives");
         return "sidebar/admin/subjectives";
     }
 
     @PostMapping("/{id}")
     public String subjectiveEdit(
             @PathVariable Long id,
-            @ModelAttribute("subjective") SubjectiveEditDto dto,
+            @ModelAttribute("subjective") SubjectiveFormDto subjectiveForm,
             BindingResult result,
             Model model,
-            @RequestParam(defaultValue = "active") String filter,
             RedirectAttributes redirectAttributes
     ) {
-        if (subjectiveService.ifExistsByContent(dto.getContent())) {
-            result.rejectValue("content", null, "[" + dto.getContent() + "]: 중복된 문제입니다.");
+        if (subjectiveService.ifExistsByContent(subjectiveForm.getContent())) {
+            result.rejectValue("content", null, "[" + subjectiveForm.getContent() + "]: 중복된 문제입니다.");
         }
         if (result.hasErrors()) {
-            dto.setId(id);
-
-            setSubjectivePage(model, filter);
-
-            model.addAttribute("subjective", dto);
+            subjectiveForm.setId(id);
+            setSubjectivePage(model, new SubjectiveSearchRequestDto(), subjectiveForm);
             model.addAttribute("mode", "edit");
             return "sidebar/admin/subjectives";
         }
-        subjectiveService.changeContent(id, dto.getContent());
+        subjectiveService.changeContent(id, subjectiveForm.getContent());
         redirectAttributes.addFlashAttribute("successMessage", "수정이 완료되었습니다.");
         return "redirect:/admin/subjectives/{id}";
     }
@@ -104,13 +92,10 @@ public class AdminSubjectiveController {
             @PathVariable Long id,
             Model model
     ) {
-        SubjectiveDetailDto subjectiveDetailDto = subjectiveService.getSubjectDetailById(id);;
+        SubjectiveFormDto subjectiveForm = subjectiveService.getSubjectDetailById(id);;
 
-        model.addAttribute("subjective", subjectiveDetailDto);
+        setSubjectivePage(model, new SubjectiveSearchRequestDto(), subjectiveForm);
         model.addAttribute("mode", "delete");
-        model.addAttribute("subjectives", subjectiveService.getAllActiveSubjectives());
-        model.addAttribute("filter", "active");
-        model.addAttribute("currentTab", "subjectives");
         return "sidebar/admin/subjectives";
     }
 
@@ -126,23 +111,14 @@ public class AdminSubjectiveController {
 
     private void setSubjectivePage(
             Model model,
-            String filter
+            SubjectiveSearchRequestDto cond,
+            SubjectiveFormDto subjectiveForm
     ) {
-        List<CategorySelectDto> categories =
-                categoryService.getAllActiveCategories()
-                        .stream()
-                        .map(c -> new CategorySelectDto(c.getName()))
-                        .toList();
+        List<SubjectiveListDto> subjectives = subjectiveService.getSubjectiveByCondition(cond);
 
-        List<AdminSubjectiveDto> subjectives = switch (filter) {
-            case "active" -> subjectiveService.getAllActiveSubjectives();
-            case "deleted" -> subjectiveService.getAllDeletedSubjectives();
-            default -> subjectiveService.getAllSubjectives();
-        };
-
-        model.addAttribute("categories", categories);
+        model.addAttribute("subjectiveForm", subjectiveForm);
         model.addAttribute("subjectives", subjectives);
-        model.addAttribute("filter", filter);
+        model.addAttribute("cond", cond);
         model.addAttribute("currentTab", "subjectives");
     }
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class AdminSubjectiveDto {
+public class SubjectiveListDto {
 
     private Long id;
     private String question;
@@ -16,7 +16,7 @@ public class AdminSubjectiveDto {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    public AdminSubjectiveDto(Subjective subjective) {
+    public SubjectiveListDto(Subjective subjective) {
         this.id = subjective.getId();
         this.question = subjective.getQuestion();
         this.category = subjective.getCategory().getName();
@@ -24,7 +24,7 @@ public class AdminSubjectiveDto {
         this.deletedAt = subjective.getDeletedAt();
     }
 
-    public AdminSubjectiveDto(Long id, String question, String category, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+    public SubjectiveListDto(Long id, String question, String category, LocalDateTime updatedAt, LocalDateTime deletedAt) {
         this.id = id;
         this.question = question;
         this.category = category;

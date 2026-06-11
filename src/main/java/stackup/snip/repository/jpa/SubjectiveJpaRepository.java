@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import stackup.snip.dto.subjective.AdminSubjectiveDto;
+import stackup.snip.dto.subjective.SubjectiveListDto;
 import stackup.snip.entity.Category;
 import stackup.snip.entity.Subjective;
 
@@ -35,17 +35,17 @@ public interface SubjectiveJpaRepository extends JpaRepository<Subjective, Long>
 
     List<Subjective> getReferenceByCategory_Id(Long categoryId);
 
-    @Query("select new stackup.snip.dto.subjective.AdminSubjectiveDto(" +
+    @Query("select new stackup.snip.dto.subjective.SubjectiveListDto(" +
             "s.id, s.question, s.category.name, s.updatedAt, s.deletedAt) " +
             "from Subjective s " +
             "where s.deletedAt is null")
-    List<AdminSubjectiveDto> findActiveSubjectives();
+    List<SubjectiveListDto> findActiveSubjectives();
 
-    @Query("select new stackup.snip.dto.subjective.AdminSubjectiveDto(" +
+    @Query("select new stackup.snip.dto.subjective.SubjectiveListDto(" +
             "s.id, s.question, s.category.name, s.updatedAt, s.deletedAt) " +
             "from Subjective s " +
             "where s.deletedAt is not null")
-    List<AdminSubjectiveDto> findDeletedSubjectives();
+    List<SubjectiveListDto> findDeletedSubjectives();
 
     boolean existsByQuestion(String question);
 

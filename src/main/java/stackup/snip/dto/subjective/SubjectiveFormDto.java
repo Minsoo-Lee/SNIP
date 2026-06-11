@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubjectiveSaveDto {
+public class SubjectiveFormDto {
 
+    private Long id;
     private String categoryName;
     private String content;
 }

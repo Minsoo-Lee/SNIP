@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import stackup.snip.dto.subjective.AdminSubjectiveDto;
-import stackup.snip.dto.subjective.CategorySubjectiveDto;
-import stackup.snip.dto.subjective.SubjectiveDetailDto;
-import stackup.snip.dto.subjective.SubjectiveDto;
+import stackup.snip.dto.subjective.*;
 import stackup.snip.entity.Category;
 import stackup.snip.entity.Subjective;
 import stackup.snip.repository.jpa.AnswerJpaRepository;
 import stackup.snip.repository.jpa.CategoryJpaRepository;
 import stackup.snip.repository.jpa.SubjectiveJpaRepository;
+import stackup.snip.repository.querydsl.SubjectiveQueryDslRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +26,7 @@ public class SubjectiveService {
     private final CategoryService categoryService;
     private final CategoryJpaRepository categoryJpaRepository;
     private final NotionService notionService;
+    private final SubjectiveQueryDslRepository subjectiveQueryDslRepository;
 
     @Transactional
     public void importFromNotion() {
@@ -78,22 +77,22 @@ public class SubjectiveService {
                 .toList();
     }
 
-    public List<AdminSubjectiveDto> getAllSubjectives() {
+    public List<SubjectiveListDto> getAllSubjectives() {
         List<Subjective> all = subjectiveJpaRepository.findAll();
-        List<AdminSubjectiveDto> subjectiveDtos = new ArrayList<>();
+        List<SubjectiveListDto> subjectiveDtos = new ArrayList<>();
         for (Subjective subjective : all) {
             subjectiveDtos.add(
-                    new AdminSubjectiveDto(subjective)
+                    new SubjectiveListDto(subjective)
             );
         }
         return subjectiveDtos;
     }
 
-    public List<AdminSubjectiveDto> getAllActiveSubjectives() {
+    public List<SubjectiveListDto> getAllActiveSubjectives() {
         return subjectiveJpaRepository.findActiveSubjectives();
     }
 
-    public List<AdminSubjectiveDto> getAllDeletedSubjectives() {
+    public List<SubjectiveListDto> getAllDeletedSubjectives() {
         return subjectiveJpaRepository.findDeletedSubjectives();
     }
 
@@ -115,10 +114,10 @@ public class SubjectiveService {
         ));
     }
 
-    public SubjectiveDetailDto getSubjectDetailById(Long id) {
+    public SubjectiveFormDto getSubjectDetailById(Long id) {
         Subjective subjective = subjectiveJpaRepository.getReferenceById(id);
         log.info("categoryName = {}", subjective.getCategory().getName());
-        return new SubjectiveDetailDto(
+        return new SubjectiveFormDto(
                 subjective.getId(), subjective.getCategory().getName(), subjective.getQuestion()
         );
     }
@@ -133,5 +132,17 @@ public class SubjectiveService {
     public void softDeleteSubjective(Long id) {
         Subjective subjective = subjectiveJpaRepository.getReferenceById(id);
         subjective.softDelete();
+    }
+
+    public List<SubjectiveListDto> getSubjectiveByCondition(SubjectiveSearchRequestDto cond) {
+        List<Subjective> subjectivesByCondition = subjectiveQueryDslRepository.findSubjectivesByCondition(cond);
+        return subjectivesByCondition.stream().map(
+                s -> new SubjectiveListDto(
+                        s.getId(),
+                        s.getQuestion(),
+                        s.getCategory().getName(),
+                        s.getUpdatedAt(),
+                        s.getDeletedAt()
+                )).toList();
     }
 }

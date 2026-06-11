@@ -80,7 +80,7 @@ public class AdminMemberController {
         }
         if (result.hasErrors()) {
             memberForm.setId(id);
-            setMemberPage(model, new MemberSearchRequestDto("deleted"), memberForm);
+            setMemberPage(model, new MemberSearchRequestDto(), memberForm);
             model.addAttribute("mode", "edit");
             return "sidebar/admin/members";
         }

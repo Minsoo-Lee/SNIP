@@ -30,7 +30,7 @@ public class MemberQueryDslRepository {
         List<Member> members = queryFactory
                 .selectFrom(member)
                 .where(filterCondition, searchCondition)
-                .orderBy(member.id.desc())
+                .orderBy(member.id.asc())
                 .offset((long) dto.getPage() * dto.getSize())
                 .limit(dto.getSize()).fetch();
 

@@ -32,7 +32,7 @@ public class CategoryQueryDslRepository {
         List<Category> categories = queryFactory
                 .selectFrom(category)
                 .where(filterCondition, searchCondition)
-                .orderBy(category.id.desc())
+                .orderBy(category.id.asc())
                 .offset((long) dto.getPage() * dto.getSize())
                 .limit(dto.getSize()).fetch();
 
