@@ -116,6 +116,13 @@ public class AdminSubjectiveController {
     ) {
         List<SubjectiveListDto> subjectives = subjectiveService.getSubjectiveByCondition(cond);
 
+        List<CategorySelectDto> categories =
+                categoryService.getAllActiveCategories()
+                        .stream()
+                        .map(c -> new CategorySelectDto(c.getName()))
+                        .toList();
+
+        model.addAttribute("categories", categories);
         model.addAttribute("subjectiveForm", subjectiveForm);
         model.addAttribute("subjectives", subjectives);
         model.addAttribute("cond", cond);
