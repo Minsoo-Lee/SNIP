@@ -2,6 +2,9 @@ package stackup.snip.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.subjective.*;
@@ -134,9 +137,9 @@ public class SubjectiveService {
         subjective.softDelete();
     }
 
-    public List<SubjectiveListDto> getSubjectiveByCondition(SubjectiveSearchRequestDto cond) {
-        List<Subjective> subjectivesByCondition = subjectiveQueryDslRepository.findSubjectivesByCondition(cond);
-        return subjectivesByCondition.stream().map(
+    public Page<SubjectiveListDto> getSubjectiveByCondition(SubjectiveSearchRequestDto cond) {
+        Page<Subjective> page = subjectiveQueryDslRepository.findSubjectivesByCondition(cond);
+        List<SubjectiveListDto> content = page.getContent().stream().map(
                 s -> new SubjectiveListDto(
                         s.getId(),
                         s.getQuestion(),
@@ -144,5 +147,7 @@ public class SubjectiveService {
                         s.getUpdatedAt(),
                         s.getDeletedAt()
                 )).toList();
+
+        return new PageImpl<>(content, PageRequest.of(cond.getPage(), cond.getSize()), page.getTotalElements());
     }
 }

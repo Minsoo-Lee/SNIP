@@ -2,6 +2,7 @@ package stackup.snip.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -114,7 +115,13 @@ public class AdminSubjectiveController {
             SubjectiveSearchRequestDto cond,
             SubjectiveFormDto subjectiveForm
     ) {
-        List<SubjectiveListDto> subjectives = subjectiveService.getSubjectiveByCondition(cond);
+        Page<SubjectiveListDto> page = subjectiveService.getSubjectiveByCondition(cond);
+
+        int currentPage = page.getNumber(); // 0-base
+        int blockSize = 10;
+
+        int startPage = (currentPage / blockSize) * blockSize;
+        int endPage = Math.min(startPage + blockSize - 1, page.getTotalPages() - 1);
 
         List<CategorySelectDto> categories =
                 categoryService.getAllActiveCategories()
@@ -124,8 +131,13 @@ public class AdminSubjectiveController {
 
         model.addAttribute("categories", categories);
         model.addAttribute("subjectiveForm", subjectiveForm);
-        model.addAttribute("subjectives", subjectives);
+        model.addAttribute("subjectives", page.getContent());
+        model.addAttribute("page", page);
         model.addAttribute("cond", cond);
         model.addAttribute("currentTab", "subjectives");
+
+        // 🔥 블록 페이징용 추가
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
     }
 }
