@@ -1,4 +1,4 @@
-package stackup.snip;
+package stackup.snip.config;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

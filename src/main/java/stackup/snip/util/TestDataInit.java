@@ -3,6 +3,7 @@ package stackup.snip.util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import stackup.snip.entity.Answer;
 import stackup.snip.entity.Category;
@@ -23,6 +24,7 @@ public class TestDataInit implements CommandLineRunner {
     private final MemberJpaRepository memberJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
     private final SubjectiveService subjectiveService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
@@ -45,7 +47,7 @@ public class TestDataInit implements CommandLineRunner {
         Member admin = new Member(
                 "admin@admin.dev",
                 "admin",
-                "1234",
+                passwordEncoder.encode("1234"),
                 LocalDateTime.now()
         );
         memberJpaRepository.save(admin);
@@ -53,7 +55,7 @@ public class TestDataInit implements CommandLineRunner {
             Member member = new Member(
                 "test" + i + "@test.com",
                 "test" + i,
-                "1234",
+                passwordEncoder.encode("1234"),
                 LocalDateTime.now()
             );
             memberJpaRepository.save(member);

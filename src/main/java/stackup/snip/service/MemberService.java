@@ -5,19 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stackup.snip.dto.member.MemberFormDto;
 import stackup.snip.dto.member.MemberListDto;
 import stackup.snip.dto.member.MemberSearchRequestDto;
 import stackup.snip.entity.Member;
-import stackup.snip.exception.login.EmailDuplicateException;
-import stackup.snip.exception.login.EmailNotExistException;
-import stackup.snip.exception.login.LoginPasswordNotMatchException;
-import stackup.snip.exception.login.NicknameDuplicateException;
+import stackup.snip.exception.login.*;
 import stackup.snip.repository.jpa.MemberJpaRepository;
 import stackup.snip.repository.querydsl.MemberQueryDslRepository;
 
+import javax.security.auth.login.AccountLockedException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +30,8 @@ public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
     private final MemberQueryDslRepository memberQueryDslRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final LoginFailService loginFailService;
 
     @Transactional
     public Member register(String email, String nickname, String password, LocalDateTime registeredTime, int streak) {
@@ -43,20 +45,50 @@ public class MemberService {
             throw new NicknameDuplicateException();
         }
 
-        return memberJpaRepository.save(new Member(email, nickname, password, registeredTime));
+        return memberJpaRepository.save(Member.builder().email(email).nickname(nickname).
+                password(passwordEncoder.encode(password)).dateTime(registeredTime).build());
     }
 
+    @Transactional
     public Member login(String email, String password) {
         // email이 존재하는지 확인
         Member member = memberJpaRepository.findByEmail(email)
                 .orElseThrow(EmailNotExistException::new);
 
-        // email과 password가 일치하는지 확인
-        if (!member.getPassword().equals(password)) {
-            throw new LoginPasswordNotMatchException();
+        if (member.getLockUntil() != null
+                && member.getLockUntil().isAfter(LocalDateTime.now())) {
+
+            long remainSeconds =
+                    Duration.between(
+                            LocalDateTime.now(),
+                            member.getLockUntil()
+                    ).getSeconds();
+
+            throw new LoginLockException(remainSeconds);
         }
 
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            loginFailService.failLogin(member);
+            throw new LoginPasswordNotMatchException();
+        }
+        successLogin(member);
+
         return member;
+    }
+
+    public void successLogin(Member member) {
+        member.initLoginFailCount();
+        member.initLockUntil();
+    }
+
+    @Transactional
+    public void failLogin(Member member) {
+        member.addLoginFailCount();
+        if (member.getLoginFailCount() >= 5) {
+            member.lockMember();
+            member.initLoginFailCount();
+        }
+        memberJpaRepository.save(member);
     }
 
     public int getAnswerStreak(Long memberId) {

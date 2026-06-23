@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import stackup.snip.dto.member.MemberLoginDto;
 import stackup.snip.entity.Member;
 import stackup.snip.exception.login.LoginFailException;
+import stackup.snip.exception.login.LoginLockException;
 import stackup.snip.service.MemberService;
 
 @Controller
@@ -41,8 +42,25 @@ public class LoginController {
             return "redirect:/";
         } catch (LoginFailException e) {
             redirectAttributes.addFlashAttribute(
-                    "loginError", "login.fail"
+                    "loginError", "이메일과 비밀번호가 일치하지 않습니다."
             );
+            return "redirect:/login";
+        } catch (LoginLockException e) {
+
+            long remainSeconds = e.getRemainSeconds();
+
+            long minutes = remainSeconds / 60;
+            long seconds = remainSeconds % 60;
+
+            redirectAttributes.addFlashAttribute(
+                    "loginError",
+                    String.format(
+                            "%d분 %d초 후 다시 시도해주세요.",
+                            minutes,
+                            seconds
+                    )
+            );
+
             return "redirect:/login";
         }
     }

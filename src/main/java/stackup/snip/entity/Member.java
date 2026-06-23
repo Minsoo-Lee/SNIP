@@ -2,6 +2,7 @@ package stackup.snip.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import stackup.snip.entity.base.TimeBaseEntity;
@@ -32,6 +33,10 @@ public class Member extends TimeBaseEntity {
     private Integer loginStreak;
     private Integer answerStreak;
 
+    //== 로그인 실패 관련 속성 ==//
+    private Integer loginFailCount;
+    private LocalDateTime lockUntil;
+
     //== 연관관계 ==//
     @OneToMany(mappedBy = "member")
     private List<LoginLog> loginLogs;
@@ -40,6 +45,7 @@ public class Member extends TimeBaseEntity {
     public Member() {
     }
 
+    @Builder
     public Member(String email, String nickname, String password, LocalDateTime dateTime) {
         this.email = email;
         this.nickname = nickname;
@@ -47,6 +53,24 @@ public class Member extends TimeBaseEntity {
         this.lastLoginDate = dateTime;
         this.loginStreak = 1;
         this.answerStreak = 0;
+        this.loginFailCount = 0;
+    }
+
+    //== 로그인 실패 관련 메서드 ==//
+    public void addLoginFailCount() {
+        this.loginFailCount++;
+    }
+
+    public void lockMember() {
+        this.lockUntil = LocalDateTime.now().plusMinutes(10L);
+    }
+
+    public void initLoginFailCount() {
+        this.loginFailCount = 0;
+    }
+
+    public void initLockUntil() {
+        this.lockUntil = null;
     }
 
     //== Streak ++ ==//
