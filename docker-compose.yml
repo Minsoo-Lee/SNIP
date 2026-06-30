@@ -4,15 +4,16 @@ services:
     container_name: snip-backend
     restart: always
     working_dir: /app
-#    command: ./gradlew bootRun --no-daemon
     ports:
-      - "8081:9090"
+      - "8081:8080"
     depends_on:
       - snip-mysql
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://snip-mysql:3306/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://snip-mysql:3306/DB이름?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       FILE_UPLOAD_DIR: /app/storage
     volumes:
       - .:/app

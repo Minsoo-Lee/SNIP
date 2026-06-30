@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Slf4j
 @Component
 public class LoginCheckInterceptor implements HandlerInterceptor {
 
@@ -16,6 +18,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             @NonNull HttpServletResponse response,
             @NonNull Object handler
     ) throws Exception {
+
+        String requestURI = request.getRequestURI();
+        log.info("[url] {}", requestURI);
 
         HttpSession session = request.getSession(false);
 
